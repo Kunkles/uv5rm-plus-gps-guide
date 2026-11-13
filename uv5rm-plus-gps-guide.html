@@ -148,6 +148,7 @@ dl.gl dt{font-weight:700;margin-top:.6em}
 dl.gl dd{margin:0;color:var(--mute)}
 footer{color:var(--mute);font-size:.85rem;border-top:1px solid var(--line);padding-top:14px}
 @media (max-width:900px){
+ #as{display:none}
  .wrap{grid-template-columns:1fr}
  #navb{display:block}
  nav{position:fixed;left:0;top:57px;bottom:0;width:250px;height:auto;background:var(--panel);border-right:1px solid var(--line);transform:translateX(-102%);transition:transform .2s;z-index:25}
@@ -199,7 +200,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 .lab div{overflow-wrap:anywhere}
 .lab i{font-style:normal;font-weight:700;display:inline-block;min-width:3.2mm}
 #lgS td,#lgS th{padding:4px 8px}
-#sv{white-space:nowrap}#sv.un{border-color:var(--acc);color:var(--acc);font-weight:700}
+#sv,#as{white-space:nowrap}#sv.un,#as.un{border-color:var(--acc);color:var(--acc);font-weight:700}
 #toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:10px;max-width:min(560px,92vw);z-index:60;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 @media print{#toast{display:none}}
@@ -213,6 +214,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
     <input id="q" type="search" placeholder="Search everything — try “repeater”, “squelch”, “share position”   ( / )" autocomplete="off" aria-label="Search the guide">
     <div id="res" role="listbox"></div>
   </div>
+  <button class="ib" id="as">Autosave: off</button>
   <button class="ib" id="sv">Save to file</button>
   <button class="ib" id="thm" title="Light / dark">◐</button>
 </header>
@@ -231,9 +233,22 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <h3>How to use this guide</h3>
 <ul class="t">
 <li><b>New to the radio?</b> Read <a href="#setup">Out of the box</a>, play with the <a href="#tour">clickable radio</a>, then run the first few <a href="#walk">animated walkthroughs</a> with the radio in your hand.</li>
+<li><b>Filling in the channel plan or log?</b> See <a href="#start-data">your data and autosave</a> for how it's kept.</li>
 <li><b>Looking for one thing?</b> Type it in the search box (or press <kbd>/</kbd>). Results jump straight to the step, setting or definition.</li>
 <li><b>Changing a setting?</b> The <a href="#menu">menu reference</a> lists every item with what it does and what to set it to.</li>
 </ul>
+</div>
+<div class="blk" id="start-data" data-t="Your data: autosave to a folder, Save to file, and which browsers support it">
+<h3>Your data and autosave</h3>
+<p>Your channel plan, test log, labels and ticked boxes always save in this browser as you type. To keep them as a real file on your computer as well, there are two options:</p>
+<ul class="t">
+<li><b>Autosave to a folder.</b> Choose a folder once and the guide keeps a data file there (<code>uv5rm-guide-data.json</code>) up to date on its own. Next time you open the guide it reconnects and loads that file. Put the folder in iCloud Drive or Dropbox and the data follows you between computers.</li>
+<li><b>Save to file</b> (top of the page). Writes the data into a copy of the guide itself. Works in every browser, but only when you press it.</li>
+</ul>
+<p id="asStat" style="font-weight:600"></p>
+<p><button class="ib" id="asPick">Choose save folder</button> <button class="ib" id="asStop" hidden>Stop using this folder</button></p>
+<div class="note"><b>Browser note:</b> folder autosave works in <b>Chrome, Edge, Brave, Opera and Arc on a computer</b>. It is <b>not available in Safari or Firefox, or on phones and tablets</b>, because those browsers don't let a web page write to a folder you choose. There the guide still saves in the browser itself; use <b>Save to file</b> or the export buttons for a backup. After restarting the browser, Chrome asks you to confirm access to the folder again: click <b>Reconnect folder</b>, and choose “Allow on every visit” if offered.</div>
+<p style="color:var(--mute);font-size:.9rem">Your data never leaves your computer. The guide has no server; the folder is read and written by your browser only. If the file was changed somewhere else in the meantime, the guide loads the newer version, and keeps the other as a “conflict” copy in the same folder instead of overwriting it.</p>
 </div>
 <div class="warn blk" id="start-legal" data-t="Licence and legal: who can transmit">
 <h3>Before you press PTT: licence and legal</h3>
@@ -952,7 +967,7 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 const mem={},DK=['uvPlan','uvLog','uvLab','uvCk','uvDone'];
 const raw={get(k){if(k in mem)return mem[k];try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){mem[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const store={get:raw.get,set(k,v){raw.set(k,v);if(DK.includes(k)){raw.set('uvTs',Date.now());dirty()}}};
+const store={get:raw.get,set(k,v){raw.set(k,v);if(DK.includes(k)){raw.set('uvTs',Date.now());dirty();try{asQueue()}catch(e){}}}};
 /* data saved inside this file: used when it is newer than what this browser holds */
 let EMB=null;try{EMB=JSON.parse($('#uvData').textContent)}catch(e){}
 if(EMB&&EMB.ts>(raw.get('uvTs')||0)){DK.forEach(k=>{if(EMB.d&&k in EMB.d&&EMB.d[k]!=null)raw.set(k,EMB.d[k])});raw.set('uvTs',EMB.ts)}
@@ -1473,6 +1488,42 @@ function ckDraw(){$('#ckl').innerHTML=CK.map((c,i)=>`<label class="${ckS.has(i)?
 $('#ckl').onchange=e=>{const i=+e.target.dataset.i;e.target.checked?ckS.add(i):ckS.delete(i);store.set('uvCk',[...ckS]);ckDraw()};
 $('#ckReset').onclick=()=>{ckS.clear();store.set('uvCk',[]);ckDraw()};ckDraw();
 
+
+/* ---------- folder autosave (File System Access API: Chromium desktop only) ---------- */
+const AS={ok:'showDirectoryPicker' in window,dir:null,on:false,need:false,last:null,t:null,name:'uv5rm-guide-data.json',msg:'',err:'',saved:0};
+function idb(mode,fn){return new Promise((res,rej)=>{const o=indexedDB.open('uvGuide',1);o.onupgradeneeded=()=>o.result.createObjectStore('kv');o.onerror=()=>rej(o.error);
+  o.onsuccess=()=>{try{const tx=o.result.transaction('kv',mode),rq=fn(tx.objectStore('kv'));tx.oncomplete=()=>res(rq&&rq.result);tx.onerror=()=>rej(tx.error)}catch(e){rej(e)}}})}
+function asUI(){const b=$('#as'),st=$('#asStat'),pk=$('#asPick'),sp=$('#asStop');
+  if(!AS.ok){b.hidden=true;pk.hidden=true;st.textContent='Folder autosave isn’t available in this browser. Your data still saves in the browser itself.';return}
+  sp.hidden=!AS.dir;pk.textContent=AS.dir?'Choose a different folder':'Choose save folder';b.classList.toggle('un',AS.need||!!AS.err);
+  if(AS.need||AS.err){b.textContent='Reconnect folder';st.textContent=(AS.err||'The browser needs you to confirm access to the folder “'+AS.dir.name+'” again.')+' Click “Reconnect folder” at the top of the page.'}
+  else if(AS.on){b.textContent='Autosave on ✓';st.textContent='Autosaving to the folder “'+AS.dir.name+'”.'+(AS.saved?' Last written '+new Date(AS.saved).toLocaleTimeString()+'.':'')+(AS.msg?' '+AS.msg:'')}
+  else{b.textContent='Autosave: off';st.textContent='Folder autosave is off.'}}
+async function asRead(){try{const fh=await AS.dir.getFileHandle(AS.name),j=JSON.parse(await(await fh.getFile()).text());return j&&j.d&&typeof j.ts==='number'?j:null}catch(e){return null}}
+async function asWrite(name,obj){const fh=await AS.dir.getFileHandle(name,{create:true}),w=await fh.createWritable();await w.write(JSON.stringify(obj,null,1));await w.close()}
+function asSnap(){const d={};DK.forEach(k=>d[k]=raw.get(k));return{app:'uv5rm-plus-gps-guide',v:1,ts:raw.get('uvTs')||0,d}}
+function applyData(j){DK.forEach(k=>{if(j.d[k]!=null)raw.set(k,j.d[k])});raw.set('uvTs',j.ts);
+  PL=raw.get('uvPlan')||JSON.parse(JSON.stringify(PLDEF));LG=raw.get('uvLog')||[];Object.assign(LB,raw.get('uvLab')||{});
+  ckS.clear();(raw.get('uvCk')||[]).forEach(x=>ckS.add(x));doneSet.clear();(raw.get('uvDone')||[]).forEach(x=>doneSet.add(x));
+  plDraw();lgDraw();lbDraw();ckDraw();drawList();$('#wtDone').checked=doneSet.has(cur.id);dirty()}
+async function asSave(){try{const mine=raw.get('uvTs')||0,j=await asRead();
+    if(j&&AS.last!=null&&j.ts>AS.last&&j.ts!==mine){await asWrite('uv5rm-guide-data.conflict-'+j.ts+'.json',j);AS.msg='The file had been changed elsewhere; that version was kept as a conflict copy.'}
+    const s=asSnap();await asWrite(AS.name,s);AS.last=s.ts;AS.saved=Date.now();AS.err=''}
+  catch(e){AS.err='Could not write to the folder.';AS.on=false}asUI()}
+async function asSync(){const j=await asRead(),mine=raw.get('uvTs')||0;
+  if(j&&j.ts>mine){applyData(j);AS.last=j.ts;AS.msg='Loaded newer data from the folder.'}
+  else if(mine&&(!j||mine>j.ts))await asSave();
+  else AS.last=j?j.ts:null}
+function asQueue(){if(!AS.on)return;clearTimeout(AS.t);AS.t=setTimeout(asSave,900)}
+async function asConnect(h,ask){AS.dir=h;AS.err='';AS.msg='';let p='granted';
+  try{if(h.queryPermission){p=await h.queryPermission({mode:'readwrite'});if(p!=='granted'&&ask)p=await h.requestPermission({mode:'readwrite'})}}catch(e){p='denied'}
+  AS.need=p!=='granted';AS.on=!AS.need;if(AS.on)await asSync();asUI()}
+async function asPick(){try{const h=await showDirectoryPicker({mode:'readwrite',id:'uvguide'});try{await idb('readwrite',s=>s.put(h,'dir'))}catch(e){}await asConnect(h,true)}catch(e){}}
+$('#asPick').onclick=asPick;
+$('#asStop').onclick=async()=>{clearTimeout(AS.t);AS.on=false;AS.need=false;AS.dir=null;AS.err='';try{await idb('readwrite',s=>s.delete('dir'))}catch(e){}asUI()};
+$('#as').onclick=()=>{if(!AS.dir)asPick();else if(AS.need||AS.err)asConnect(AS.dir,true);else flash($('#start-data'))};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AS.on)asSync().then(asUI)});
+if(AS.ok)idb('readonly',s=>s.get('dir')).then(h=>{if(h)asConnect(h,false);else asUI()}).catch(()=>asUI());else asUI();
 
 /* ---------- nav ---------- */
 const secs=$$('section[data-nav]');

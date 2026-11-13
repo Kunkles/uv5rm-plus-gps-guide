@@ -17,7 +17,12 @@ Read it online at <https://kunkles.github.io/uv5rm-plus-gps-guide/>, or download
 
 ## Your data
 
-The channel plan, test log, labels and ticked boxes are saved in your browser. **Save to file** (top of the page) writes them into the HTML file itself so they travel with it. The copy in this repository contains no personal data.
+The channel plan, test log, labels and ticked boxes are saved in your browser as you type. Two ways to keep them as files:
+
+- **Autosave to a folder.** Choose a folder once and the guide keeps `uv5rm-guide-data.json` there up to date, and reloads it on the next visit. Works in Chrome, Edge, Brave, Opera and Arc on a computer. **Not available in Safari, Firefox or on phones**, which don't let a web page write to a chosen folder; the guide says so and falls back to browser storage.
+- **Save to file** (top of the page) writes the data into a copy of the HTML file itself. Works in every browser, on demand.
+
+Nothing is sent anywhere: the guide has no server. The copy in this repository contains no personal data.
 
 ### Keeping personal data out of the repository
 
