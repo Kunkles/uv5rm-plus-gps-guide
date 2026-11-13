@@ -2,7 +2,7 @@
 
 An offline, searchable walkthrough for the Baofeng UV-5RM Plus **GPS** handheld radio, in a single HTML file.
 
-Open `uv5rm-plus-gps-guide.html` in any browser. No install, no build step, no internet needed (one optional feature uses it, see below).
+Read it online at <https://kunkles.github.io/uv5rm-plus-gps-guide/>, or download `uv5rm-plus-gps-guide.html` and open it in any browser to use it offline. No install, no build step, no internet needed (one optional feature uses it, see below).
 
 ## What's in it
 
@@ -18,6 +18,13 @@ Open `uv5rm-plus-gps-guide.html` in any browser. No install, no build step, no i
 ## Your data
 
 The channel plan, test log, labels and ticked boxes are saved in your browser. **Save to file** (top of the page) writes them into the HTML file itself so they travel with it. The copy in this repository contains no personal data.
+
+### Keeping personal data out of the repository
+
+**Save to file** writes your data into the HTML file, so never commit a copy you have saved into. Keep your own copy in `private/` (ignored by git) or outside the folder. Two checks back this up:
+
+- A pre-commit hook refuses any commit where the guide contains saved data. Turn it on once per clone with `git config core.hooksPath hooks`.
+- The same check runs on GitHub for every push and pull request.
 
 ## Finding local repeaters
 
