@@ -183,7 +183,9 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
  body.pr main{padding:0}
  body.pr .blk{border:0;padding:0;margin:0;background:none}
  body.pr #labels>h2,body.pr #labels>p{display:none}
- body.pr .blk:not(#plan-box):not(#cheat-box):not(#log-box):not(#lab-out),body.pr #plan>p,body.pr #plMsg,body.pr .x{display:none}
+ body.pr .blk.prk{margin:0 0 6pt;break-inside:avoid}
+ body.pr .blk.prk h3{font-size:11pt;margin:0 0 2pt}
+ body.pr .blk:not(#plan-box):not(#cheat-box):not(#log-box):not(#lab-out):not(.prk),body.pr #plan>p,body.pr #plMsg,body.pr .x{display:none}
  body.pr table.plan input,body.pr table.plan select{border:0;padding:0;background:none;appearance:none;-webkit-appearance:none;color:#000}
  body.pr kbd{background:none;border:1px solid #888}
  body.pr h4{color:#000;margin:.6em 0 .2em}
@@ -232,6 +234,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <div class="blk" id="start-how" data-t="How to use this guide">
 <h3>How to use this guide</h3>
 <ul class="t">
+<li><b>Emergency, and you've never used a radio?</b> Go straight to the <a href="#quick">emergency quick start</a>.</li>
 <li><b>New to the radio?</b> Read <a href="#setup">Out of the box</a>, play with the <a href="#tour">clickable radio</a>, then run the first few <a href="#walk">animated walkthroughs</a> with the radio in your hand.</li>
 <li><b>Filling in the channel plan or log?</b> See <a href="#start-data">your data and autosave</a> for how it's kept.</li>
 <li><b>Looking for one thing?</b> Type it in the search box (or press <kbd>/</kbd>). Results jump straight to the step, setting or definition.</li>
@@ -265,6 +268,83 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <tr><td>Computer programming</td><td>Baofeng's Windows CPS for the GPS model; CHIRP is experimental (see <a href="#pc">Programming on a Mac</a>)</td><td>CHIRP, model “5RM”</td></tr>
 </table></div>
 <p class="note">Baofeng's manual contradicts itself in places (menu numbers, which key is which). Throughout this guide, <b>trust the name shown on your screen over the number</b>, and check the symbols printed on your keys. Where the manual was unclear, this guide says so.</p>
+</div>
+</section>
+
+<section id="quick" data-nav="Emergency quick start">
+<h2>Emergency quick start</h2>
+<p class="nop">For someone who has never used a radio and needs help now. <button class="ib" id="qkPrint">Print this page</button> and keep a copy with each radio.</p>
+<div class="warn blk prk" id="quick-when" data-t="Emergency: when someone without a licence may use the radio">
+<h3>When this applies</h3>
+<p><b>If a phone works, call or text 911 first.</b> It is faster and they can find you.</p>
+<p>Normally you need a licence to transmit on this radio. US rules make an exception when <b>life or property is in immediate danger and no other way of communicating is available</b>: then anyone may use whatever radio they have to call for help. That is the situation this page is for. It is not a loophole for everyday use, and anyone can <b>listen</b> at any time without a licence.</p>
+</div>
+<div class="blk prk" id="quick-how" data-t="How a two-way radio works, in one minute">
+<h3>How a radio like this works</h3>
+<ul class="t">
+<li><b>One person talks at a time.</b> While you hold the talk button you cannot hear anyone. Say your piece, let go, listen.</li>
+<li><b>Everyone on the channel hears you.</b> There is no dialling a person and no privacy. You call out and whoever is listening answers.</li>
+<li><b>It reaches a few miles, less in buildings and valleys.</b> Radio waves travel in nearly straight lines. Getting outside and getting higher helps more than anything else.</li>
+<li><b>A channel is a frequency.</b> Both radios must be on the same one. The big number on the screen is the frequency, or the channel's name.</li>
+<li><b>Nobody may be listening.</b> Unlike a phone, there is no guarantee of an answer. Keep trying, on more than one channel.</li>
+</ul>
+</div>
+<div class="blk prk" id="quick-call" data-t="Emergency: call for help step by step">
+<h3>Calling for help, step by step</h3>
+<ol class="t" style="padding-left:1.3em">
+<li><b>Turn it on.</b> Twist the knob on top clockwise until it clicks. Keep turning to about halfway for volume. Check the antenna is screwed on.</li>
+<li><b>Pick the channel.</b>
+ <ul class="t"><li>If there is a label or card with the radio, use the channel it names: press <kbd>▲</kbd> or <kbd>▼</kbd> until that number or name shows.</li>
+ <li>If there is no plan: press <kbd>VFO/MR</kbd> until the screen shows <code>VFO</code>, then type <kbd>1</kbd><kbd>4</kbd><kbd>6</kbd><kbd>5</kbd><kbd>2</kbd><kbd>0</kbd><kbd>0</kbd><kbd>0</kbd>. The screen should read <b>146.520</b>, the frequency most radio operators listen to.</li></ul></li>
+<li><b>Listen for ten seconds.</b> If people are talking, wait for a gap.</li>
+<li><b>Hold the big button on the side (PTT).</b> The light turns red. Wait one second. Hold the radio upright, about two inches from your mouth, and speak slowly in a normal voice:
+<p style="font-size:1.1rem;margin:.5em 0"><i>“<b>Emergency, emergency.</b> This is <u>&nbsp;your name&nbsp;</u>. I need help. Can anyone hear me? Over.”</i></p></li>
+<li><b>Let go of the button and listen</b> for thirty seconds. A green light means a signal is coming in.</li>
+<li><b>No answer?</b> Repeat it. Try three times, then move to the next thing in “If nobody answers”.</li>
+</ol>
+</div>
+<div class="blk prk" id="quick-say" data-t="Emergency: what to say when someone answers">
+<h3>When someone answers</h3>
+<p>Speak in plain words. You don't need radio language. Give this, in this order, and say “over” each time you finish:</p>
+<ol class="t" style="padding-left:1.3em">
+<li><b>Where you are.</b> Address, cross streets, trail name, landmarks. For coordinates, hold <kbd>EXIT</kbd> for two seconds and read the numbers off the screen (press <kbd>EXIT</kbd> again before talking).</li>
+<li><b>What happened.</b> “A man has fallen and can't move his leg.”</li>
+<li><b>How many people</b> and whether anyone is hurt.</li>
+<li><b>What you need.</b> Ambulance, rescue, someone to phone 911 for you.</li>
+<li><b>Your name</b>, and that you'll stay on this channel.</li>
+</ol>
+<p>Then <b>stay on that channel</b> and answer their questions. If you didn't catch something, say “say again”. Don't change channel unless they ask you to. The person answering is probably a volunteer who will phone emergency services for you, so give them time.</p>
+</div>
+<div class="blk prk" id="quick-none" data-t="Emergency: if nobody answers">
+<h3>If nobody answers</h3>
+<ol class="t" style="padding-left:1.3em">
+<li><b>Get outside and higher.</b> A hilltop, an upper floor, the roof of a car. Hold the radio up with the antenna pointing at the sky.</li>
+<li><b>Try 446.000</b> the same way: <kbd>4</kbd><kbd>4</kbd><kbd>6</kbd><kbd>0</kbd><kbd>0</kbd><kbd>0</kbd><kbd>0</kbd><kbd>0</kbd>.</li>
+<li><b>Try the saved channels.</b> Press <kbd>VFO/MR</kbd> until a channel number shows, then step through with <kbd>▲</kbd>. Channels marked as repeaters reach much further. Call on each one.</li>
+<li><b>Find where people are talking.</b> Hold <kbd>#</kbd> for two seconds to scan. When it stops on voices, hold <kbd>#</kbd> again to stay there, wait for a pause, and make your call.</li>
+<li><b>Try again every few minutes,</b> and in the first five minutes of each hour: by a common convention, that is when operators in remote areas listen on 146.520.</li>
+<li><b>Save the battery.</b> Switch off between attempts if help may be hours away.</li>
+</ol>
+</div>
+<div class="blk prk" id="quick-stuck" data-t="Emergency: the radio isn't working (quick checks)">
+<h3>If the radio doesn't seem to work</h3>
+<div class="tw"><table>
+<tr><th>What you see</th><th>Do this</th></tr>
+<tr><td>Silence, no hiss, nothing</td><td>Turn the volume up. Hold the small button below the big one (SK2): hiss means the radio is working and the channel is just quiet.</td></tr>
+<tr><td>Buttons do nothing</td><td>The keypad is locked. Hold <kbd>✱</kbd> for two seconds.</td></tr>
+<tr><td>No red light when you press PTT</td><td>The radio isn't transmitting: that frequency is probably outside what it is allowed to send on. Go to 146.520.</td></tr>
+<tr><td>Strange menu on the screen</td><td>Press <kbd>EXIT</kbd> a few times, or press PTT once, to get back.</td></tr>
+<tr><td>Screen is dark</td><td>Battery flat or radio off. Plug a phone charger (USB-C) into the battery; even a few minutes helps.</td></tr>
+<tr><td>You hear them, they don't hear you</td><td>Hold PTT a full second before speaking. Move higher. Check the upper line of the screen is the highlighted one (press <kbd>A/B</kbd>).</td></tr>
+</table></div>
+</div>
+<div class="blk prk" id="quick-info" data-t="Emergency: get news and weather on the radio">
+<h3>Getting information</h3>
+<p><b>Weather and official alerts:</b> hold <kbd>0</kbd> for two seconds, then press <kbd>▲</kbd> until you hear a voice forecast. <b>News:</b> press the top side button (SK1) for ordinary FM radio, then <kbd>MENU</kbd> to search for stations. Press <kbd>EXIT</kbd> to go back to two-way radio. Listening uses very little battery.</p>
+</div>
+<div class="blk nop" id="quick-after" data-t="After the emergency: learn the radio and get licensed">
+<h3>Before you ever need this</h3>
+<p>A radio nobody has practised with is not much help. Anyone can practise the listening parts today: turning it on, changing channels, weather, scanning. To practise transmitting, get a licence; it is one multiple-choice exam (see <a href="#onair-licence">getting licensed</a>). The first <a href="#walk" data-wt="first">animated walkthrough</a> shows these same steps on the drawn radio.</p>
 </div>
 </section>
 
@@ -1402,7 +1482,7 @@ $('#plCsv').onclick=()=>{const rows=PL.filter(r=>r.f&&!isNaN(parseFloat(r.f)));c
 function plCheat(){const rows=PL.filter(r=>r.f).slice(0,12),t=$('#chCh');if(!t)return;
   t.innerHTML='<tr><th>Zone</th><th>Ch</th><th>Name</th><th>MHz</th><th>Shift</th><th>Tone</th><th>Notes</th></tr>'+(rows.length?rows.map(r=>`<tr><td>${esc(r.z)}</td><td>${esc(r.c)}</td><td><b>${esc(r.n)}</b></td><td>${esc(r.f)}</td><td>${r.d?esc((r.d==='-'?'−':'+')+(r.o||'')):'—'}</td><td>${esc(r.t||'—')}</td><td>${esc(r.m)}</td></tr>`).join(''):'<tr><td colspan="7">Add channels in the channel plan and they appear here.</td></tr>')}
 function printSec(id){const s=$('#'+id);document.body.classList.add('pr');s.classList.add('pr-on');const done=()=>{document.body.classList.remove('pr');s.classList.remove('pr-on');removeEventListener('afterprint',done)};addEventListener('afterprint',done);print()}
-$('#plPrint').onclick=()=>printSec('plan');$('#chPrint').onclick=()=>printSec('cheat');
+$('#qkPrint').onclick=()=>printSec('quick');$('#plPrint').onclick=()=>printSec('plan');$('#chPrint').onclick=()=>printSec('cheat');
 plDraw();
 
 /* ---------- emergency candidates + repeater import ---------- */

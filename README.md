@@ -6,6 +6,7 @@ Read it online at <https://kunkles.github.io/uv5rm-plus-gps-guide/>, or download
 
 ## What's in it
 
+- **Emergency quick start**: a printable page for someone who has never used a radio and has no other way to call for help.
 - **Search** across every section, walkthrough step, menu setting, fix and glossary term (press `/`).
 - **Animated walkthroughs** on a drawn radio: which key to press, when to hold, what the screen shows.
 - **Clickable radio** explaining each key's short and long press.
