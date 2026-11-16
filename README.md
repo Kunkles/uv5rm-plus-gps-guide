@@ -1,6 +1,6 @@
-# UV-5RM Plus GPS Field Guide
+# UV-5RM Pro & Plus GPS Field Guide
 
-An offline, searchable walkthrough for the Baofeng UV-5RM Plus **GPS** handheld radio, in a single HTML file.
+An offline, searchable walkthrough for the Baofeng **UV-5RM Pro** and **UV-5RM Plus GPS** handheld radios (the same radio sold under two names), in a single HTML file.
 
 Read it online at <https://kunkles.github.io/uv5rm-plus-gps-guide/>, or download `uv5rm-plus-gps-guide.html` and open it in any browser to use it offline. No install, no build step, no internet needed (one optional feature uses it, see below).
 
@@ -45,7 +45,7 @@ This is the only step that needs internet. Repeater databases don't allow a web 
 
 ## Accuracy
 
-Built from Baofeng's *UV-5RM Plus GPS User Manual* (print V1.0), Baofeng's product listing, the CHIRP project's macOS notes and issue tracker, and community reports, checked November 2026. Baofeng's manual contradicts itself in places and firmware varies between production runs: if your radio shows something different, the radio is right. The guide has not been verified key-by-key against a physical radio.
+Built from Baofeng's *UV-5RM Plus GPS User Manual* (print V1.0), Baofeng's product listing, the CHIRP project's macOS notes and issue tracker, and community reports, checked November 2026. Baofeng's manual contradicts itself in places and firmware varies between production runs: if your radio shows something different, the radio is right. The keypad and screen drawings are taken from a real UV-5RM Pro; the menus and procedures have not yet been verified step by step on one.
 
 Transmitting requires the appropriate licence. The guide explains what is and isn't legal on this radio in the US; check the rules where you live.
 
