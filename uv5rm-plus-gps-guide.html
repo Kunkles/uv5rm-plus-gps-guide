@@ -774,10 +774,22 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 
 <section id="plan" data-nav="My channel plan">
 <h2>My channel plan</h2>
-<p>Lay out the channels for your set of radios here. It saves in this browser as you type. Print it, or export a file to load into the programming software so every radio gets the same list.</p>
+<div class="blk" id="plan-what" data-t="What a channel plan is and why to make one">
+<h3>What a channel plan is</h3>
+<p>A channel plan is the list of channels you put into your radios, decided once and written down: which frequency goes in which zone and channel number, with what name and settings. With a plan, every radio in your group has the same channels in the same places, so “go to channel 2” means the same thing to everyone, and you can rebuild a radio after a reset.</p>
+<p>This page holds your plan. It saves in this browser as you type. Building one takes four steps:</p>
+<ol class="t" style="padding-left:1.3em">
+<li><a href="#plan-zones">Choose your zones</a>: what kind of channel goes in which zone.</li>
+<li><a href="#plan-collect">Collect your channels</a>: the frequencies, from the other parts of this guide.</li>
+<li><a href="#plan-rows">Fill in the table</a>, one row per channel.</li>
+<li><a href="#plan-radio">Put it in the radios</a>, by keypad or computer, and copy it to every radio.</li>
+</ol>
+<p><b>Not sure where to begin?</b> Press <b>Load example plan</b> below. It fills the table with a typical family layout you can then edit: replace the rows marked EXAMPLE and delete what you don't need.</p>
+</div>
 <div class="blk" id="plan-box" data-t="Channel plan table: your group channels and repeaters">
 <div class="ctl">
 <button class="ib" id="plAdd">+ Add channel</button>
+<button class="ib" id="plEx">Load example plan</button>
 <button class="ib" id="plPrint">Print</button>
 <button class="ib" id="plCsv">Export CSV (CHIRP)</button>
 <button class="ib" id="plSave">Save plan file</button>
@@ -787,17 +799,81 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <div class="tw"><table id="plT" class="plan"><thead><tr><th>Zone</th><th>Ch</th><th>Name</th><th>Receive MHz</th><th>Shift</th><th>Offset MHz</th><th>Tone</th><th>Power</th><th>Width</th><th>Notes</th><th></th><th></th></tr></thead><tbody></tbody></table></div>
 <p id="plMsg" style="color:var(--mute);font-size:.9rem"></p>
 </div>
-<div class="blk" id="plan-how" data-t="How to fill in the channel plan and use the export">
-<h3>Filling it in</h3>
+
+<div class="blk" id="plan-zones" data-t="Channel plan step 1: choose your zones (suggested zone layout)">
+<h3>Step 1 · Choose your zones</h3>
+<p>The radio groups channels into <b>zones</b>: up to 10, with up to 64 channels each. You see one zone at a time and switch with <kbd>MENU</kbd> › Zone. Put the channels you'd need in a hurry in Zone 1, so they're the first thing on the screen. A layout that works for most families:</p>
+<div class="tw"><table>
+<tr><th>Zone</th><th>Suggested name</th><th>What goes in it</th></tr>
+<tr><td class="n">1</td><td><b>FAMILY</b></td><td>The channels you'd use in an emergency: your family's primary and backup channels, the two calling frequencies, and your one or two best local repeaters. Keep it short, under 10, so it's quick to step through.</td></tr>
+<tr><td class="n">2</td><td><b>RPTRS</b></td><td>Other local repeaters, nearest first. The repeater finder and the RepeaterBook import add channels here.</td></tr>
+<tr><td class="n">3</td><td><b>LISTEN</b></td><td>Channels you only listen to: FRS walkie-talkie channels, marine channel 16 if you're near water. The table marks these “listen”, and the export blocks transmitting on them.</td></tr>
+<tr><td class="n">4</td><td><b>TRY</b></td><td>Candidates you're still testing, such as simplex frequencies during your week of listening. Move the winners to Zone 1 and delete the rest.</td></tr>
+</table></div>
+<p>NOAA weather doesn't need a zone: the radio has it built in (hold <kbd>0</kbd>).</p>
+</div>
+
+<div class="blk" id="plan-collect" data-t="Channel plan step 2: collect your channels (where each frequency comes from)">
+<h3>Step 2 · Collect your channels</h3>
+<div class="tw"><table>
+<tr><th>Channel</th><th>Where to get it</th></tr>
+<tr><td>Family primary and backup</td><td>Pick one 2 m and one 70 cm simplex frequency with the method in <a href="#emerg-method">Emergency family channels</a>. Its button loads candidates into Zone 4 to try out.</td></tr>
+<tr><td>Calling frequencies</td><td>146.520 and 446.000 MHz, the same everywhere in the US.</td></tr>
+<tr><td>Local repeaters</td><td><a href="#emerg-rpt">Find repeaters near you</a> (tick and add) or the <a href="#far-tool">link finder</a>. Both add to Zone 2 with the frequency, shift and tone filled in.</td></tr>
+<tr><td>Listen-only</td><td>FRS channels 1–22 (462–467 MHz) to hear walkie-talkie users nearby; marine channel 16 (156.800 MHz).</td></tr>
+</table></div>
+</div>
+
+<div class="blk" id="plan-rows" data-t="Channel plan step 3: fill in the table, column by column with examples">
+<h3>Step 3 · Fill in the table</h3>
+<p>One row per channel. <b>+ Add channel</b> adds a row after the last one.</p>
+<div class="tw"><table>
+<tr><th>Column</th><th>What to put</th><th>Simplex example</th><th>Repeater example</th></tr>
+<tr><td><b>Zone</b>, <b>Ch</b></td><td>Where it goes on the radio: zone 1–10, channel 1–64. No two rows in the same zone may share a channel number.</td><td>1, 1</td><td>2, 1</td></tr>
+<tr><td><b>Name</b></td><td>What the screen shows. Six characters or fewer, the same on every radio.</td><td>FAM2M</td><td>HILL</td></tr>
+<tr><td><b>Receive MHz</b></td><td>The frequency you listen on. For a repeater, its output: the number it's listed under.</td><td>147.480</td><td>146.940</td></tr>
+<tr><td><b>Shift</b></td><td>Blank (—) for simplex. For a repeater, + or − as listed.</td><td>—</td><td>−</td></tr>
+<tr><td><b>Offset MHz</b></td><td>Blank for simplex. For a repeater, how far the shift goes: almost always 0.600 on 2 m and 5.000 on 70 cm.</td><td>(blank)</td><td>0.600</td></tr>
+<tr><td><b>Tone</b></td><td>The tone your radio sends. For a repeater, the tone in its listing, or it won't respond. For your family channels, pick one tone and use it on all of them (100.0 is common): you still hear everyone, and later you can switch on the matching receive tone on every radio to filter out strangers.</td><td>100.0</td><td>100.0</td></tr>
+<tr><td><b>Power</b></td><td>High for repeaters and emergency channels; Low for close-range chat to save battery.</td><td>High</td><td>High</td></tr>
+<tr><td><b>Width</b></td><td>Wide for US ham channels. Every radio sharing a channel should match.</td><td>Wide</td><td>Wide</td></tr>
+<tr><td><b>Notes</b></td><td>Anything that helps: who uses it, check-in times, coverage.</td><td>family primary</td><td>club repeater</td></tr>
+<tr><td><b>i</b> button</td><td>Repeater details: call sign, link node, owner, contact, access rules, with lookup links.</td><td></td><td>W6ABC</td></tr>
+</table></div>
+<p>The marker at the end of each row checks the frequency: <span class="tag tx">TX ok</span> means inside the US amateur bands, where a licence lets you transmit; <span class="tag">listen</span> means outside them, so the export makes it receive-only. Some units, the UV-5RM Pro especially, will physically transmit wider; that doesn't make it legal.</p>
+</div>
+
+<div class="blk" id="plan-radio" data-t="Channel plan step 4: put the plan in the radios, by keypad or computer, and copy to every radio">
+<h3>Step 4 · Put it in the radios</h3>
+<p><b>By keypad</b>, for a handful of channels. Work one zone at a time:</p>
+<ol class="t" style="padding-left:1.3em">
+<li>Switch the radio to that zone: <kbd>MENU</kbd> › Zone, pick it, or choose <b>+Add Zone</b> and type its name (see <a href="#walk" data-wt="zone">Add a zone</a>). Channels are always saved into the zone you're in.</li>
+<li>For each row: frequency mode, type the receive frequency, set the transmit frequency and tone for repeaters, then <b>CH_Memory</b> into the row's channel number. The <a href="#walk" data-wt="save">Save a simplex channel</a> and <a href="#walk" data-wt="repeater">Program a repeater</a> walkthroughs show every key.</li>
+<li>Name it (<a href="#walk" data-wt="name">Name a channel</a>) and check it against the printed plan.</li>
+</ol>
+<p><b>By computer</b>, for anything more: <b>Export CSV (CHIRP)</b> writes the plan in CHIRP's format (Zone 1 is rows 1–64, Zone 2 is 65–128, and so on), or type it into Baofeng's software. See <a href="#pc">Programming on a Mac</a>; CHIRP support for this radio is still being tested. Power isn't in the export, so set it in the software.</p>
+<p><b>Copy it to every radio.</b> Program one radio, check it, then do the others the same way, or read the first one into the software and write that file to the rest. Then change each radio's ID and name so GPS sharing can tell them apart. Finally hand everyone a <a href="#cheat">pocket cheat sheet</a> and <a href="#labels">radio label</a>, which fill in from this plan.</p>
+</div>
+
+<div class="blk" id="plan-mistakes" data-t="Channel plan common mistakes: tones, offsets, wrong zone, names">
+<h3>Common mistakes</h3>
 <ul class="t">
-<li><b>Zone / Ch:</b> where the channel lives on the radio (zones 1–10, channels 1–64).</li>
-<li><b>Name:</b> six characters or fewer.</li>
-<li><b>Shift / Offset:</b> leave blank for simplex. For a repeater pick + or − and the offset (0.600 on 2 m, 5.000 on 70 cm).</li>
-<li><b>Tone:</b> the CTCSS tone you transmit. Leave OFF for your own simplex channels unless you all set the same one.</li>
-<li>Rows outside 144–148 / 420–450 MHz are marked <span class="tag">listen</span>; the export sets them receive-only. <span class="tag tx">TX ok</span> means inside the US amateur bands, where a licence lets you transmit. Some units, the UV-5RM Pro especially, will physically transmit wider; that doesn't make it legal.</li>
-<li><b>Export CSV</b> uses CHIRP's column layout. Row numbers follow the zones: Zone 1 is rows 1–64, Zone 2 is 65–128, and so on. You can also open the CSV in Numbers.</li>
-<li><b>Repeater details:</b> the <b>i</b> button at the end of a row opens a panel for the repeater's call sign, link node, how to reach the far end, owner, contact and access rules, with lookup links. The CSV export puts the call sign, node, dialling and owner in CHIRP's comment column; contact details and access codes are left out of it.</li>
-<li><b>Save to file</b> (top of the page) writes the plan, test log, labels and ticked boxes into the guide file itself, so they travel with it. <b>Save plan file</b> makes a separate backup of just the plan.</li>
+<li><b>A receive tone on one radio only.</b> That radio goes quiet to everyone not sending the tone. This plan only sets transmit tones; if you add receive tones, do it on every radio.</li>
+<li><b>Wrong shift direction or offset</b> on a repeater: it simply won't answer. Check the listing.</li>
+<li><b>Saved into the wrong zone.</b> The radio saves into whichever zone is showing. Switch zone first.</li>
+<li><b>Different names or channel numbers on different radios.</b> The whole point is that they match.</li>
+<li><b>Mixing wide and narrow</b> between radios: one side sounds faint or distorted.</li>
+<li><b>Leaving the factory channels.</b> Units can arrive with FRS/GMRS channels you mustn't transmit on. Replace them with your plan, or move them to the LISTEN zone.</li>
+</ul>
+</div>
+
+<div class="blk" id="plan-how" data-t="Saving, exporting and backing up the channel plan">
+<h3>Saving and backing up</h3>
+<ul class="t">
+<li><b>Save plan file</b> downloads a backup of just the plan; <b>Load plan file</b> brings it back, on any computer.</li>
+<li><b>Save to file</b> and <b>Autosave</b> (top of the page) keep the plan together with the test log and labels. See <a href="#start-data">your data and autosave</a>.</li>
+<li><b>Export CSV</b> puts the repeater details (call sign, node, dialling, owner) in CHIRP's comment column, and leaves contact details and access codes out.</li>
+<li><b>Print</b> gives a paper copy to check radios against and keep with them.</li>
 </ul>
 </div>
 </section>
@@ -941,7 +1017,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <p><button class="ib" id="rsParse">Read pasted results</button> <label class="ib" style="cursor:pointer">Load CSV file<input type="file" id="rsCsv" accept=".csv,text/csv" hidden></label> <span id="rsMsg" style="color:var(--mute);font-size:.9rem"></span></p>
 <h4>3 · Tick the ones you want</h4>
 <div class="tw"><table id="rsT"></table></div>
-<p id="rsAct" hidden><label>Put them in zone <input class="num" id="rsZone" type="number" min="1" max="10" value="3" style="width:64px"></label> <button class="ib go" id="rsAdd" style="background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700">Add ticked to my channel plan</button> <span id="rsAddMsg" style="color:var(--mute);font-size:.9rem"></span></p>
+<p id="rsAct" hidden><label>Put them in zone <input class="num" id="rsZone" type="number" min="1" max="10" value="2" style="width:64px"></label> <button class="ib go" id="rsAdd" style="background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700">Add ticked to my channel plan</button> <span id="rsAddMsg" style="color:var(--mute);font-size:.9rem"></span></p>
 <h4>Before you rely on one</h4>
 <ul class="t">
 <li>Rows this radio can't use (other bands, digital-only modes) are shown greyed out and can't be ticked. A repeater that needs a DCS code instead of a tone is imported without one; set it by hand.</li>
@@ -1724,6 +1800,16 @@ $('#plT').addEventListener('input',e=>{const tr=e.target.closest('tr[data-i]'),k
   plSave()});
 $('#plT').addEventListener('click',e=>{if(e.target.classList.contains('x')){PL.splice(+e.target.closest('tr').dataset.i,1);plSave();plDraw()}else if(e.target.classList.contains('dt')){const r=PL[+e.target.closest('tr').dataset.i];PLopen.has(r)?PLopen.delete(r):PLopen.add(r);plDraw()}});
 $('#plAdd').onclick=()=>{const l=PL[PL.length-1]||{z:1,c:0};PL.push({z:l.z,c:Math.min(64,(+l.c||0)+1),n:'',f:'',d:'',o:'',t:'',p:'Low',w:'Wide',m:''});plSave();plDraw()};
+const PLEX=[[1,1,'FAM2M','147.480','','','100.0','High','Wide','EXAMPLE family primary (2 m): choose yours in Emergency family channels'],
+[1,2,'FAM70','446.050','','','100.0','High','Wide','EXAMPLE family backup (70 cm)'],
+[1,3,'CALL2M','146.520','','','','High','Wide','National 2 m calling frequency'],
+[1,4,'CALL70','446.000','','','','High','Wide','National 70 cm calling frequency'],
+[1,5,'RPTEX','146.940','-','0.600','100.0','High','Wide','EXAMPLE repeater: replace with your nearest one'],
+[3,1,'FRS1','462.5625','','','','Low','Narrow','Listen only: FRS walkie-talkie channel 1'],
+[3,2,'FRS3','462.6125','','','','Low','Narrow','Listen only: FRS channel 3, used by many preparedness groups'],
+[3,3,'MAR16','156.800','','','','Low','Wide','Listen only: marine distress and calling']];
+$('#plEx').onclick=()=>{if(PL.some(r=>r.f)&&!confirm('Replace your current plan with the example plan?'))return;
+  PL=PLEX.map(([z,c,n,f,d,o,t,p,w,m])=>({z,c,n,f,d,o,t,p,w,m}));plSave();plDraw();plMsg('Example plan loaded. Replace the rows marked EXAMPLE with your own channels.')};
 $('#plReset').onclick=()=>{if(confirm('Replace the plan with the starter rows?')){PL=JSON.parse(JSON.stringify(PLDEF));plSave();plDraw()}};
 function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
 $('#plSave').onclick=()=>{dl('uv5rm-channel-plan.json',JSON.stringify(PL,null,1),'application/json');plMsg('Plan file saved to your Downloads folder.')};
@@ -1746,8 +1832,8 @@ plDraw();
 /* ---------- emergency candidates + repeater import ---------- */
 function plBulk(z,list,tag){PL=PL.filter(r=>!((r.m||'').startsWith(tag)&&+r.z===z));const used=new Set(PL.filter(r=>+r.z===z).map(r=>+r.c));let c=1,n=0;
   list.forEach(x=>{while(used.has(c))c++;if(c>64)return;used.add(c);PL.push({z,c,n:x[0],f:x[1],d:x[2]||'',o:x[3]||'',t:x[4]||'',p:'High',w:'Wide',m:tag+(x[5]?' '+x[5]:'')});n++});plSave();plDraw();return n}
-$('#emAdd').onclick=()=>{const n=plBulk(2,[['EM2-A','146.460'],['EM2-B','147.480'],['EM2-C','147.540'],['EM7-A','445.950'],['EM7-B','446.050'],['EM7-C','446.150']],'candidate:');
-  $('#emMsg').textContent='Zone 2 of your channel plan now holds these '+n+' candidates (any earlier candidate rows there were replaced).'};
+$('#emAdd').onclick=()=>{const n=plBulk(4,[['EM2-A','146.460'],['EM2-B','147.480'],['EM2-C','147.540'],['EM7-A','445.950'],['EM7-B','446.050'],['EM7-C','446.150']],'candidate:');
+  $('#emMsg').textContent='Zone 4 (TRY) of your channel plan now holds these '+n+' candidates (any earlier candidate rows there were replaced).'};
 let RSL=[];
 $('#rsGo').onclick=()=>{const loc=$('#rsLoc').value.trim();if(!loc){$('#rsMsg').textContent='Type a city and state or a ZIP code first.';$('#rsLoc').focus();return}
   const mi=Math.max(5,Math.min(100,+$('#rsMi').value||25));
@@ -1922,14 +2008,14 @@ $('#lfHere').onclick=()=>{if(!navigator.geolocation){$('#lfOut').innerHTML='<p>T
 const lfTx=r=>inR(r[5]+r[6],TXR)&&inR(r[5],TXR);
 const lfDesc=(r,d)=>`<b>${esc(r[0])}</b> · <span class="n">${r[5].toFixed(3)}</span> ${r[6]?(r[6]<0?'−':'+')+Math.abs(r[6]).toFixed(3):'simplex'} · tone ${r[7]||'none listed'} · ${esc(r[3])} · ${d.toFixed(0)} mi${r[8]?' <span class="tag bad">location doubtful</span>':''}${r[6]===0?' <span class="tag">simplex node, short range</span>':''}`;
 const netStr=r=>r[4].map(n=>n[0]+(n[1]?' '+n[1]:'')).join('; ');
-function lfAdd(i){const o=LF.last[i];if(!o)return;const r=o.r;const z=3,used=new Set(PL.filter(p=>+p.z===z).map(p=>+p.c)),names=new Set(PL.map(p=>(p.n||'').toUpperCase()));let c=1;while(used.has(c))c++;
-  if(c>64){toast('Zone 3 of your channel plan is full.');return}
-  if(PL.some(p=>+p.z===z&&parseFloat(p.f)===r[5])){toast('That repeater is already in Zone 3 of your channel plan.');return}
+function lfAdd(i){const o=LF.last[i];if(!o)return;const r=o.r;const z=2,used=new Set(PL.filter(p=>+p.z===z).map(p=>+p.c)),names=new Set(PL.map(p=>(p.n||'').toUpperCase()));let c=1;while(used.has(c))c++;
+  if(c>64){toast('Zone 2 of your channel plan is full.');return}
+  if(PL.some(p=>+p.z===z&&parseFloat(p.f)===r[5])){toast('That repeater is already in Zone 2 of your channel plan.');return}
   let nm=r[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)||'RPT';let k=1;while(names.has(nm)&&k<10)nm=nm.slice(0,5)+(k++);
   PL.push({z,c,n:nm,f:r[5].toFixed(3),d:r[6]>0?'+':r[6]<0?'-':'',o:r[6]?Math.abs(r[6]).toFixed(3):'',t:r[7],p:'High',w:'Wide',m:('link finder: '+r[3]).slice(0,120),cs:r[0],nw:netStr(r),
     dial:!o.far?'':o.T==='WIN System'?'WIN System: talk to '+o.far[0]+', '+o.far[3]:(o.T==='AllStar'?'dial *3'+o.nB[1]:'dial '+o.nB[1])+' → '+o.far[0]+', '+o.far[3]+' ('+o.far[5].toFixed(3)+'); disconnect '+(o.T==='AllStar'?'*1'+o.nB[1]:o.T==='IRLP'?'73':'#'),own:'',ct:'',ac:''});
   PLopen.add(PL[PL.length-1]);
-  plSave();plDraw();toast('Added '+nm+' to Zone 3 of your channel plan, channel '+c+'. Its details panel is open there for the owner and access notes.')}
+  plSave();plDraw();toast('Added '+nm+' to Zone 2 of your channel plan, channel '+c+'. Its details panel is open there for the owner and access notes.')}
 $('#lfGo').onclick=async()=>{const out=$('#lfOut');
   if(!LF.db){out.innerHTML='<div class="warn">Load the repeater data first (step 1).</div>';return}
   out.innerHTML='<p>Looking up places…</p>';
