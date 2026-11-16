@@ -980,7 +980,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <div class="blk" id="emerg-method" data-t="Method for picking emergency family channels">
 <h3>The method</h3>
 <ol class="t" style="padding-left:1.3em">
-<li><b>Start from the simplex parts of the band, using your region's band plan.</b> Nationally, 2 m FM simplex sits around 146.40–146.58 and 147.42–147.57 MHz, and 70 cm simplex around 445–447 MHz, but regional coordinators change the details. Don't make the calling frequencies (146.520, 446.000) your home channel, since everyone uses those.</li>
+<li><b>Start from the simplex parts of the band, using your region's band plan</b> (choose your region under <a href="#emerg-cand">candidate frequencies</a> below). Nationally, 2 m FM simplex sits around 146.40–146.58 and 147.42–147.57 MHz, and 70 cm simplex around 445–447 MHz, but regional coordinators change the details. Don't make the calling frequencies (146.520, 446.000) your home channel, since everyone uses those.</li>
 <li><b>Load candidates and listen for a week.</b> Use the button below, write them to the radio, and <a href="#walk" data-wt="scan">scan them</a> at different times of day. Cross off any with regular traffic.</li>
 <li><b>Keep three channels:</b>
  <ul class="t"><li><b>Primary on 2 m</b>: carries further outdoors and over hills.</li><li><b>Backup on 70 cm</b>: better in and out of buildings and cars.</li><li><b>A local repeater</b>, ideally one with backup power that the local emergency group uses, for when you are too far apart for direct contact.</li></ul></li>
@@ -991,15 +991,12 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <li><b>Practise monthly.</b> Five minutes, everyone on the air from a different place.</li>
 </ol>
 </div>
-<div class="blk" id="emerg-cand" data-t="Candidate simplex frequencies for a family channel">
+<div class="blk" id="emerg-cand" data-t="Candidate simplex frequencies for a family channel, by region (national, Southern California)">
 <h3>Candidate frequencies to audition</h3>
-<div class="tw"><table>
-<tr><th>Band</th><th>Candidates (MHz)</th><th>Why these</th></tr>
-<tr><td>2 m</td><td>146.460 · 147.480 · 147.540</td><td>Inside the national simplex segments and valid under both the 15 kHz and 20 kHz channel spacings used in different regions</td></tr>
-<tr><td>70 cm</td><td>445.950 · 446.050 · 446.150</td><td>Near, but not on, the 446.000 calling frequency</td></tr>
-</table></div>
+<p><label>Your region <select id="emReg" style="font:inherit;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);margin-left:6px"></select></label></p>
+<div id="emBody"></div>
 <p><button class="ib go" id="emAdd" style="background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700">Add these to my channel plan</button> <span id="emMsg" style="color:var(--mute);font-size:.9rem"></span></p>
-<div class="warn"><b>Check your regional band plan before using these.</b> They come from the national plan, and some regions differ sharply. Southern California is the clearest example: there, almost all of 445–450 MHz is repeater outputs (FM simplex is limited to spots such as 446.000, 446.500 and 446.520), 70 cm repeaters shift −5 MHz, and several 2 m frequencies inside the simplex segments are used by long-established repeaters. Search for your state or region's “2 meter band plan” and “440 band plan”, published by the local frequency coordinator, then let your week of listening make the final call.</div>
+<p style="color:var(--mute);font-size:.9rem">Region not listed? Use “National”, then search for your state or region's “2 meter band plan” and “440 band plan”, published by the local frequency coordinator, and drop any candidate it reserves for something else. Whatever the region, your week of listening makes the final call.</p>
 </div>
 <div class="blk" id="emerg-rpt" data-t="Find local repeaters near you: search, import, tick and add to the channel plan">
 <h3>Find repeaters near you</h3>
@@ -1832,8 +1829,32 @@ plDraw();
 /* ---------- emergency candidates + repeater import ---------- */
 function plBulk(z,list,tag){PL=PL.filter(r=>!((r.m||'').startsWith(tag)&&+r.z===z));const used=new Set(PL.filter(r=>+r.z===z).map(r=>+r.c));let c=1,n=0;
   list.forEach(x=>{while(used.has(c))c++;if(c>64)return;used.add(c);PL.push({z,c,n:x[0],f:x[1],d:x[2]||'',o:x[3]||'',t:x[4]||'',p:'High',w:'Wide',m:tag+(x[5]?' '+x[5]:'')});n++});plSave();plDraw();return n}
-$('#emAdd').onclick=()=>{const n=plBulk(4,[['EM2-A','146.460'],['EM2-B','147.480'],['EM2-C','147.540'],['EM7-A','445.950'],['EM7-B','446.050'],['EM7-C','446.150']],'candidate:');
-  $('#emMsg').textContent='Zone 4 (TRY) of your channel plan now holds these '+n+' candidates (any earlier candidate rows there were replaced).'};
+const REG={
+ nat:{name:'National (most of the US)',
+  two:['146.460','147.480','147.540'],seventy:['445.950','446.050','446.150'],
+  why2:'Inside the national 2 m simplex segments and valid under both the 15 kHz and 20 kHz channel spacings used in different regions.',
+  why7:'Near, but not on, the 446.000 calling frequency.',
+  avoid:['Repeater inputs and outputs: check your regional band plan for which frequencies those are.','146.520 and 446.000 as your home channel: they are the calling frequencies everyone uses.'],
+  warn:'These come from the national band plan, and some regions differ sharply. Check yours before relying on them.',
+  src:'ARRL national band plan.'},
+ socal:{name:'Southern California (roughly San Luis Obispo and Kern counties south)',
+  two:['146.535','146.595','147.525','147.555'],seventy:['446.500','446.520','445.000'],
+  why2:'Inside the Southern California simplex segments (146.415–146.600 and 147.400–147.600), on less-used in-between channels.',
+  why7:'The FM voice simplex frequencies in the Southern California 440 plan, other than the 446.000 calling frequency. Almost everything else from 445 to 450 MHz is repeater outputs here.',
+  avoid:['146.400, 146.415, 146.475, 146.505 and 147.420–147.465: tied to long-established repeaters.','146.430 (amateur TV), 146.460 (remote base), 146.565 (transmitter hunts).','146.550, 146.580, 147.510, 147.540, 147.570: legitimate simplex, but widely known and busier. Hikers use 146.580.','Anything else between 445 and 450 MHz: repeater outputs, many of them private systems not on public lists.'],
+  warn:'70 cm repeaters in Southern California shift −5 MHz, the opposite of most of the country.',
+  src:'Southern California 2 m band plan (TASMA; the copy found is dated 1998, so its exception list may have changed) and the 440 MHz coordinator\'s open-repeater list (SCRRBA, April 2023).'}};
+let emR=store.get('uvReg');if(!REG[emR])emR='nat';
+$('#emReg').innerHTML=Object.entries(REG).map(([k,v])=>`<option value="${k}" ${k===emR?'selected':''}>${esc(v.name)}</option>`).join('');
+function emDraw(){const r=REG[emR];
+  $('#emBody').innerHTML=`<div class="tw"><table><tr><th>Band</th><th>Candidates (MHz)</th><th>Why these</th></tr><tr><td>2 m</td><td class="n">${r.two.join(' · ')}</td><td>${esc(r.why2)}</td></tr><tr><td>70 cm</td><td class="n">${r.seventy.join(' · ')}</td><td>${esc(r.why7)}</td></tr></table></div>
+  <p><b>Avoid in this region:</b></p><ul class="t">${r.avoid.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+  <div class="warn">${esc(r.warn)}</div><p style="color:var(--mute);font-size:.9rem">Source: ${esc(r.src)}</p>`}
+$('#emReg').onchange=e=>{emR=e.target.value;store.set('uvReg',emR);emDraw();$('#emMsg').textContent=''};
+emDraw();
+$('#emAdd').onclick=()=>{const r=REG[emR],L='ABCDEFG',list=r.two.map((f,i)=>['EM2-'+L[i],f]).concat(r.seventy.map((f,i)=>['EM7-'+L[i],f]));
+  const n=plBulk(4,list,'candidate:');
+  $('#emMsg').textContent='Zone 4 (TRY) of your channel plan now holds these '+n+' candidates for '+r.name.split(' (')[0]+' (any earlier candidate rows there were replaced).'};
 let RSL=[];
 $('#rsGo').onclick=()=>{const loc=$('#rsLoc').value.trim();if(!loc){$('#rsMsg').textContent='Type a city and state or a ZIP code first.';$('#rsLoc').focus();return}
   const mi=Math.max(5,Math.min(100,+$('#rsMi').value||25));
