@@ -436,7 +436,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <div class="warn" id="setup-factory"><b>First, clear the factory channels.</b> UV-5RM Pro units have been seen arriving with <b>Zone 1, channels 1–30</b> already filled with FRS/GMRS channels: the 22 standard FRS/GMRS channels (462.5500–462.7250 and 467.5625–467.7125 MHz) plus 8 GMRS repeater channels. To check yours, step through Zone 1 with <kbd>▲</kbd> <kbd>▼</kbd> in channel mode and look for frequencies starting 462 or 467.
 <ul class="t" style="margin-top:.5em">
 <li><b>Why remove them:</b> this radio isn't certified for FRS or GMRS, so transmitting on them isn't legal, and a ham licence doesn't cover them. The radio has no receive-only setting per channel, so any of them will transmit if PTT is pressed. And they occupy the slots your own channels should have.</li>
-<li><b>How:</b> <kbd>MENU</kbd> › Program Channel › <b>CH_Delete</b>, one channel at a time (see the <a href="#walk" data-wt="delete">Delete a channel</a> walkthrough). It's much quicker in Baofeng's programming software (see <a href="#pc">Programming on a Mac</a>).</li>
+<li><b>How:</b> in <b>channel mode</b> (press <kbd>VFO/MR</kbd> until a zone and channel number show), go to the channel, then <kbd>MENU</kbd> › Program Channel › <b>CH_Delete</b>, one channel at a time. CH_Delete isn't in the menu in frequency mode (see the <a href="#walk" data-wt="delete">Delete a channel</a> walkthrough). It's much quicker in Baofeng's programming software (see <a href="#pc">Programming on a Mac</a>).</li>
 <li><b>Worth keeping for listening:</b> anyone may listen to FRS. Putting back just FRS 1 (462.5625) and FRS 3 (462.6125, used by many preparedness groups) in a LISTEN zone lets you hear walkie-talkie users nearby; the <a href="#plan">example channel plan</a> includes them. Transmit there only in a genuine emergency.</li>
 <li><b>If your family wants to talk to FRS radios routinely,</b> the legal route is a GMRS licence ($35, no exam, covers your immediate family) and a GMRS-certified radio, not this one.</li>
 </ul></div>
@@ -855,7 +855,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <p><b>By keypad</b>, for a handful of channels. Work one zone at a time:</p>
 <ol class="t" style="padding-left:1.3em">
 <li>Switch the radio to that zone: <kbd>MENU</kbd> › Zone, pick it, or choose <b>+Add Zone</b> and type its name (see <a href="#walk" data-wt="zone">Add a zone</a>). Channels are always saved into the zone you're in.</li>
-<li>For each row: frequency mode, type the receive frequency, set the transmit frequency and tone for repeaters, then <b>CH_Memory</b> into the row's channel number. CH_Memory opens at the first empty slot, so if your row's number is already taken (by a factory channel, say), delete that channel first with CH_Delete. The <a href="#walk" data-wt="save">Save a simplex channel</a> and <a href="#walk" data-wt="repeater">Program a repeater</a> walkthroughs show every key.</li>
+<li>For each row: frequency mode, type the receive frequency, set the transmit frequency and tone for repeaters, then <b>CH_Memory</b> into the row's channel number. CH_Memory opens at the first empty slot, so if your row's number is already taken (by a factory channel, say), delete that channel first with CH_Delete (in channel mode). The <a href="#walk" data-wt="save">Save a simplex channel</a> and <a href="#walk" data-wt="repeater">Program a repeater</a> walkthroughs show every key.</li>
 <li>Name it (<a href="#walk" data-wt="name">Name a channel</a>) and check it against the printed plan.</li>
 </ol>
 <p><b>By computer</b>, for anything more: <b>Export CSV (CHIRP)</b> writes the plan in CHIRP's format (Zone 1 is rows 1–64, Zone 2 is 65–128, and so on), or type it into Baofeng's software. See <a href="#pc">Programming on a Mac</a>; CHIRP support for this radio is still being tested. Power isn't in the export, so set it in the software.</p>
@@ -1453,7 +1453,7 @@ const WT=[
  ['menu',pc(4),'Optional: set <b>Trans Power</b>, <b>Bandwidth</b> (Wide) and tones here first. Each one: select, <kbd>MENU</kbd>, choose, <kbd>MENU</kbd> to save.'],
  [D('17'),pc(17),'Go to <b>CH_Memory</b> (type <kbd>1</kbd><kbd>7</kbd> or scroll) and press <kbd>MENU</kbd>.'],
  ['up',opt('CH_Memory',['CH01','CH02','CH03','CH04','CH05'],2),'Choose the channel slot to store into with <kbd>▲</kbd><kbd>▼</kbd>. The list opens at the first <b>empty</b> slot: on a radio still holding its 30 factory channels, that is 31.'],
- ['menu',T('CH_Memory','Saved',['CH03 · 146.520']),'Press <kbd>MENU</kbd> to save. If the number you want is not offered, that slot is in use: free it first with <b>CH_Delete</b>.'],
+ ['menu',T('CH_Memory','Saved',['CH03 · 146.520']),'Press <kbd>MENU</kbd> to save. If the number you want is not offered, that slot is in use: free it first with <b>CH_Delete</b>, which is in the menu in channel mode.'],
  ['vfo',S(V('146.520','CH 003'),V('446.000','CH 002','CALL 70')),'Press <kbd>EXIT</kbd>, then <kbd>VFO/MR</kbd> to return to channel mode. Your new channel is there.']],
  after:'The channel is saved into the <b>current zone</b>. Next: <a href="#walk" data-wt="name">give it a name</a>.'},
 {id:'repeater',cat:'Programming',t:'Program a repeater',s:'Example: repeater output 146.940 MHz, −0.600 MHz offset (you transmit on 146.340), 100.0 Hz tone.',steps:[
@@ -1482,10 +1482,12 @@ const WT=[
  ['exit',mm(3),'<kbd>EXIT</kbd> back, then <b>Radio Setting</b>.'],
  ['menu',rs(1),'<b>Squelch</b>: level 1–9. Higher needs a stronger signal to open the speaker. 3 is a good start; raise it if you hear bursts of noise.'],
  ['menu',opt('Squelch',['OFF','Level 1','Level 2','Level 3','Level 4'],3),'Choose and press <kbd>MENU</kbd> to save.']]},
-{id:'delete',cat:'Programming',t:'Delete a channel',s:'Clear a memory slot.',steps:[
+{id:'delete',cat:'Programming',t:'Delete a channel',s:'Clear a memory slot. Works in channel mode only.',steps:[
+ ['vfo',CH1,'Press <kbd>VFO/MR</kbd> until the screen shows a zone and channel number: <b>channel mode</b>. CH_Delete doesn\'t appear in the menu in frequency (VFO) mode.'],
+ ['up',S(V('462.5625','CH 005'),V('446.000','CH 002')),'Step with <kbd>▲</kbd> <kbd>▼</kbd> to the channel you want to remove, so you can see which one it is.'],
  ['menu',mm(4),'<kbd>MENU</kbd> › <b>Program Channel</b>.'],
- [D('18'),pc(18),'Go to <b>CH_Delete</b> and press <kbd>MENU</kbd>.'],
- ['up',opt('CH_Delete',['CH01','CH02','CH03','CH04','CH05'],2),'Choose the channel to remove.'],
+ ['down',pc(18),'Scroll to <b>CH_Delete</b> and press <kbd>MENU</kbd>. Its number in the list may differ on your radio.'],
+ ['up',opt('CH_Delete',['CH03','CH04','CH05','CH06','CH07'],2),'Make sure the channel shown is the one to remove.'],
  ['menu',T('CH_Delete','Deleted',['CH03']),'Press <kbd>MENU</kbd> to confirm. There is no undo, so double-check the number.']]},
 {id:'scan',cat:'Scanning',t:'Scan your channels',s:'Sweep through saved channels and stop on activity.',steps:[
  ['vfo',CH1,'Be in channel mode.'],
@@ -1700,8 +1702,8 @@ const MENU=[
 ['Program Channel',13,'Scan Priority','OFF · ON','Make this the priority channel, checked far more often while scanning.'],
 ['Program Channel',14,'TX Admit','Always · Channel Free · CTDS Correct','Block transmitting when the channel is busy (Channel Free), or busy with a different tone.'],
 ['Program Channel',15,'Skip Frequency','OFF · ON','Described in the manual only as on/off; likely skips this entry during scans.'],
-['Program Channel',17,'CH_Memory','CH01–CH64','Save the current settings into a channel slot. The list opens at the first empty slot; to reuse a number that is taken, delete that channel first (CH_Delete).'],
-['Program Channel',18,'CH_Delete','CH01–CH64','Erase a channel slot.'],
+['Program Channel',17,'CH_Memory','CH01–CH64','Save the current settings into a channel slot. The list opens at the first empty slot; to reuse a number that is taken, delete that channel first (CH_Delete, in channel mode).'],
+['Program Channel',18,'CH_Delete','CH01–CH64','Erase a channel slot. Only appears in channel mode: press VFO/MR first if you can\'t find it.'],
 ['Radio Info',1,'Versions','Firmware · Hardware','Version information; useful when asking for support.'],
 ['Radio Info',2,'My Radio','Radio ID · Radio Name','View and change this radio\'s ID (used for signalling and GPS sharing) and its name.'],
 ['GNSS',1,'GNSS On/Off','OFF · ON','Switch the GPS receiver on or off.'],
@@ -1736,7 +1738,8 @@ const FIX=[
 ['Forgot the power-on password','—','Read the radio with the CPS and clear the password there. See Unlock guides.'],
 ['Mac doesn\'t see the programming cable','Counterfeit PL2303 chip, charge-only adapter, or plug not seated','Run ls /dev/cu.* in Terminal with the cable in and out. Use a CH340 or FTDI cable; don\'t install extra drivers.'],
 ['CHIRP says the radio did not respond','GPS firmware isn\'t supported by official CHIRP builds','Use the experimental module or Baofeng\'s CPS in a Windows VM. See Programming on a Mac.'],
-['CH_Memory starts at 31, or won\'t offer channel 1','Channels 1–30 already hold the factory FRS/GMRS channels, and CH_Memory only opens at the first empty slot','Delete the factory channels (MENU › Program Channel › CH_Delete, or in Baofeng\'s software); see Out of the box › First power-on checklist.'],
+['No CH_Delete in the Program Channel menu','The radio is in frequency (VFO) mode; CH_Delete only appears in channel mode','Press VFO/MR until a zone and channel number show, then open MENU › Program Channel again.'],
+['CH_Memory starts at 31, or won\'t offer channel 1','Channels 1–30 already hold the factory FRS/GMRS channels, and CH_Memory only opens at the first empty slot','Delete the factory channels (in channel mode, MENU › Program Channel › CH_Delete, or in Baofeng\'s software); see Out of the box › First power-on checklist.'],
 ['Charger light never turns green','Radio is switched on in the cradle','Switch the radio off while charging.'],
 ['CPS in the Windows VM can\'t connect','Cable not passed through to the VM, wrong COM port, or missing Windows driver','Attach the USB device to the VM, check Device Manager for the COM number, push the plug in hard.']];
 $('#fixt').innerHTML='<tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr>'+(FIX.map((f,i)=>`<tr id="f${i}"><td><b>${f[0]}</b></td><td>${f[1]}</td><td>${f[2]}</td></tr>`).join(''));
