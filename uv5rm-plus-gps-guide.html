@@ -199,7 +199,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
  body.pr #labels>h2,body.pr #labels>p{display:none}
  body.pr .blk.prk{margin:0 0 6pt;break-inside:avoid}
  body.pr .blk.prk h3{font-size:11pt;margin:0 0 2pt}
- body.pr .blk:not(#plan-box):not(#cheat-box):not(#log-box):not(#lab-out):not(.prk),body.pr #plan>p,body.pr #plMsg,body.pr .x{display:none}
+ body.pr .blk:not(#plan-box):not(#cheat-box):not(#log-box):not(#lab-out):not(.prk),body.pr #plan>p,body.pr #plMsg,body.pr .x,body.pr .dt{display:none}
  body.pr table.plan input,body.pr table.plan select{border:0;padding:0;background:none;appearance:none;-webkit-appearance:none;color:#000}
  body.pr kbd{background:none;border:1px solid #888}
  body.pr h4{color:#000;margin:.6em 0 .2em}
@@ -233,6 +233,14 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 @keyframes flow{to{stroke-dashoffset:-14}}
 @media (prefers-reduced-motion:reduce){.rptd .up,.rptd .dn{animation:none}}
 .lfo{margin:10px 0}.lfo p{margin:.35em 0}
+table.plan .dt{border:1px solid var(--line);background:none;color:var(--mute);border-radius:50%;width:22px;height:22px;font-size:.8rem;padding:0;line-height:20px;vertical-align:middle}
+table.plan .dt.on{color:var(--acc);border-color:var(--acc);font-weight:700}
+table.plan td.ac2{white-space:nowrap}
+table.plan tr.pdet td{background:var(--code);padding:8px 10px 10px}
+table.plan tr.pdet .lbf,table.plan tr.pdet .pdl{position:sticky;left:10px;max-width:min(620px,calc(100vw - 96px))}
+table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:560px){table.plan tr.pdet .lbf{grid-template-columns:1fr}}
+.lfl{font-size:.85rem;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -613,6 +621,17 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 </div>
 </div>
 
+<div class="blk" id="far-owner" data-t="Finding a repeater's owner or trustee, and getting link access codes">
+<h3>Finding a repeater's owner</h3>
+<p>The owner, or “trustee”, is usually whoever holds the call sign the repeater identifies with, often a radio club. To find them:</p>
+<ol class="t" style="padding-left:1.3em">
+<li><b>The node's information page</b> names the owner: IRLP nodes at irlp.net, AllStar nodes at stats.allstarlink.org, EchoLink nodes in the EchoLink app. The link finder and your channel plan link straight to these.</li>
+<li><b>The repeater's RepeaterBook page</b> often lists the sponsor, trustee, club website and access notes.</li>
+<li><b>Look up the call sign</b> on QRZ.com (free account; often shows an email or club website) or the FCC licence search. A club call sign leads to the club's website, which usually has a repeater page.</li>
+<li><b>Ask on the air</b>, or during the club's net. Regulars know who runs it and how linking works there.</li>
+</ol>
+<p><b>Expect to join the club.</b> Many clubs share link access codes only with members. Dues are usually small and keep the repeater running. Record what you learn in the repeater's details in <a href="#plan">your channel plan</a>: the <b>i</b> button on its row.</p>
+</div>
 <div class="blk" id="far-tool" data-t="Link finder: automatically find repeaters that connect your area to a distant town">
 <h3>Link finder</h3>
 <p>Type where you are and where you want to reach. The finder looks for a linked repeater within reach of each end on the same network, and for any single repeater that might cover both.</p>
@@ -752,6 +771,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <li><b>Tone:</b> the CTCSS tone you transmit. Leave OFF for your own simplex channels unless you all set the same one.</li>
 <li>Rows outside 144–148 / 420–450 MHz are marked <span class="tag">listen</span>; the export sets them receive-only. <span class="tag tx">TX ok</span> means inside the US amateur bands, where a licence lets you transmit. Some units, the UV-5RM Pro especially, will physically transmit wider; that doesn't make it legal.</li>
 <li><b>Export CSV</b> uses CHIRP's column layout. Row numbers follow the zones: Zone 1 is rows 1–64, Zone 2 is 65–128, and so on. You can also open the CSV in Numbers.</li>
+<li><b>Repeater details:</b> the <b>i</b> button at the end of a row opens a panel for the repeater's call sign, link node, how to reach the far end, owner, contact and access rules, with lookup links. The CSV export puts the call sign, node, dialling and owner in CHIRP's comment column; contact details and access codes are left out of it.</li>
 <li><b>Save to file</b> (top of the page) writes the plan, test log, labels and ticked boxes into the guide file itself, so they travel with it. <b>Save plan file</b> makes a separate backup of just the plan.</li>
 </ul>
 </div>
@@ -1650,24 +1670,45 @@ const PLDEF=[{z:1,c:1,n:'CALL2M',f:'146.520',d:'',o:'',t:'',p:'High',w:'Wide',m:
 let PL=store.get('uvPlan')||JSON.parse(JSON.stringify(PLDEF));
 const sel=(k,v,opts)=>`<select data-k="${k}">${opts.map(o=>`<option value="${o[0]}" ${String(o[0])===String(v)?'selected':''}>${o[1]}</option>`).join('')}</select>`;
 const inp=(k,v,a)=>`<input data-k="${k}" value="${esc(v??'').replace(/"/g,'&quot;')}" ${a||''}>`;
+/* lookup links for a repeater's call sign and link nodes */
+function lookLinks(cs,nw){const L=[],c=String(cs||'').trim().toUpperCase().split(/[^A-Z0-9]/)[0],o='target="_blank" rel="noopener"';
+  if(/^[A-Z0-9]{3,8}$/.test(c)&&/\d/.test(c))L.push(`<a href="https://www.qrz.com/db/${encodeURIComponent(c)}" ${o}>QRZ: ${esc(c)}</a>`,`<a href="https://www.repeaterbook.com/repeaters/callResult.php?call=${encodeURIComponent(c)}" ${o}>RepeaterBook: ${esc(c)}</a>`);
+  const re=/(IRLP|AllStar|EchoLink)\D{0,6}(\d{3,7})/gi;let m;const seen=new Set();
+  while((m=re.exec(String(nw||'')))){const t=m[1].toLowerCase(),n=m[2];if(seen.has(t+n))continue;seen.add(t+n);
+    if(t==='irlp')L.push(`<a href="https://www.irlp.net/status/index.php?nodeid=${n}" ${o}>IRLP node ${n}</a>`);
+    else if(t==='allstar')L.push(`<a href="https://stats.allstarlink.org/stats/${n}" ${o}>AllStar node ${n}</a>`);
+    else L.push(`EchoLink node ${n} (look it up in the EchoLink app)`)}
+  return L.length?'Look up: '+L.join(' · '):''}
+const DETK=['cs','nw','dial','own','ct','ac'],hasDet=r=>DETK.some(k=>r[k]),PLopen=new WeakSet();
+const NOLINK='Add a call sign or node number to get lookup links.';
 function plStat(r){const f=parseFloat(r.f);if(!r.f)return'';if(isNaN(f)||!inR(f,RXR))return'<span class="tag bad">out of range</span>';
   const tx=r.d==='+'?f+(parseFloat(r.o)||0):r.d==='-'?f-(parseFloat(r.o)||0):f;return inR(tx,TXR)?'<span class="tag tx">TX ok</span>':'<span class="tag">listen</span>'}
-function plDraw(){$('#plT tbody').innerHTML=PL.map((r,i)=>`<tr data-i="${i}"><td class="w1">${inp('z',r.z,'type="number" min="1" max="10"')}</td><td class="w1">${inp('c',r.c,'type="number" min="1" max="64"')}</td><td class="w2">${inp('n',r.n,'maxlength="6" placeholder="NAME"')}</td><td class="w3">${inp('f',r.f,'inputmode="decimal" placeholder="146.520"')}</td><td class="w1">${sel('d',r.d,[['','—'],['+','+'],['-','−']])}</td><td class="w2">${inp('o',r.o,'inputmode="decimal" placeholder="0.600"')}</td><td class="w2">${sel('t',r.t,[['','OFF']].concat(CTC.map(c=>[c,c])))}</td><td class="w2">${sel('p',r.p,[['Low','Low'],['Middle','Mid'],['High','High']])}</td><td class="w2">${sel('w',r.w,[['Wide','Wide'],['Narrow','Narrow']])}</td><td class="w4">${inp('m',r.m)}</td><td class="st">${plStat(r)}</td><td><button class="x" title="Remove">×</button></td></tr>`).join('');plCheat()}
+function plDraw(){$('#plT tbody').innerHTML=PL.map((r,i)=>`<tr data-i="${i}"><td class="w1">${inp('z',r.z,'type="number" min="1" max="10"')}</td><td class="w1">${inp('c',r.c,'type="number" min="1" max="64"')}</td><td class="w2">${inp('n',r.n,'maxlength="6" placeholder="NAME"')}</td><td class="w3">${inp('f',r.f,'inputmode="decimal" placeholder="146.520"')}</td><td class="w1">${sel('d',r.d,[['','—'],['+','+'],['-','−']])}</td><td class="w2">${inp('o',r.o,'inputmode="decimal" placeholder="0.600"')}</td><td class="w2">${sel('t',r.t,[['','OFF']].concat(CTC.map(c=>[c,c])))}</td><td class="w2">${sel('p',r.p,[['Low','Low'],['Middle','Mid'],['High','High']])}</td><td class="w2">${sel('w',r.w,[['Wide','Wide'],['Narrow','Narrow']])}</td><td class="w4">${inp('m',r.m)}</td><td class="st">${plStat(r)}</td><td class="ac2"><button class="dt${hasDet(r)?' on':''}" title="Repeater details: owner, link node, access">i</button> <button class="x" title="Remove">×</button></td></tr>${PLopen.has(r)?`<tr data-i="${i}" class="pdet"><td colspan="12"><div class="lbf">
+<label>Repeater call sign ${inp('cs',r.cs,'placeholder="W6ABC"')}</label>
+<label>Link network and node ${inp('nw',r.nw,'placeholder="AllStar 2503; IRLP 3033"')}</label>
+<label>To reach the far end ${inp('dial',r.dial,'placeholder="dial *341894; disconnect *141894"')}</label>
+<label>Owner or club ${inp('own',r.own,'placeholder="club or trustee name"')}</label>
+<label>Contact ${inp('ct',r.ct,'placeholder="website, email, net night"')}</label>
+<label>Access code and rules ${inp('ac',r.ac,'placeholder="members only; code from club"')}</label>
+</div><p class="lfl pdl">${lookLinks(r.cs,r.nw)||NOLINK}</p></td></tr>`:''}`).join('');plCheat()}
 function plSave(){store.set('uvPlan',PL);plCheat();if(window.uvRefresh)uvRefresh()}
 function plMsg(t){$('#plMsg').textContent=t}
-$('#plT').addEventListener('input',e=>{const tr=e.target.closest('tr[data-i]'),k=e.target.dataset.k;if(!tr||!k)return;const r=PL[+tr.dataset.i];r[k]=e.target.value;$('.st',tr).innerHTML=plStat(r);plSave()});
-$('#plT').addEventListener('click',e=>{if(e.target.classList.contains('x')){PL.splice(+e.target.closest('tr').dataset.i,1);plSave();plDraw()}});
+$('#plT').addEventListener('input',e=>{const tr=e.target.closest('tr[data-i]'),k=e.target.dataset.k;if(!tr||!k)return;const r=PL[+tr.dataset.i];r[k]=e.target.value;
+  const st=$('.st',tr);if(st)st.innerHTML=plStat(r);
+  if(tr.classList.contains('pdet')){if(k==='cs'||k==='nw')$('.pdl',tr).innerHTML=lookLinks(r.cs,r.nw)||NOLINK;const b=tr.previousElementSibling&&$('.dt',tr.previousElementSibling);if(b)b.classList.toggle('on',hasDet(r))}
+  plSave()});
+$('#plT').addEventListener('click',e=>{if(e.target.classList.contains('x')){PL.splice(+e.target.closest('tr').dataset.i,1);plSave();plDraw()}else if(e.target.classList.contains('dt')){const r=PL[+e.target.closest('tr').dataset.i];PLopen.has(r)?PLopen.delete(r):PLopen.add(r);plDraw()}});
 $('#plAdd').onclick=()=>{const l=PL[PL.length-1]||{z:1,c:0};PL.push({z:l.z,c:Math.min(64,(+l.c||0)+1),n:'',f:'',d:'',o:'',t:'',p:'Low',w:'Wide',m:''});plSave();plDraw()};
 $('#plReset').onclick=()=>{if(confirm('Replace the plan with the starter rows?')){PL=JSON.parse(JSON.stringify(PLDEF));plSave();plDraw()}};
 function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
 $('#plSave').onclick=()=>{dl('uv5rm-channel-plan.json',JSON.stringify(PL,null,1),'application/json');plMsg('Plan file saved to your Downloads folder.')};
-$('#plLoad').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!Array.isArray(d))throw 0;PL=d.map(r=>({z:r.z,c:r.c,n:r.n||'',f:r.f||'',d:r.d||'',o:r.o||'',t:r.t||'',p:r.p||'Low',w:r.w||'Wide',m:r.m||''}));plSave();plDraw();plMsg('Loaded '+PL.length+' channels.')}catch(x){plMsg('That file is not a channel plan saved from this guide.')}};rd.readAsText(f);e.target.value=''};
+$('#plLoad').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!Array.isArray(d))throw 0;PL=d.map(r=>({z:r.z,c:r.c,n:r.n||'',f:r.f||'',d:r.d||'',o:r.o||'',t:r.t||'',p:r.p||'Low',w:r.w||'Wide',m:r.m||'',cs:r.cs||'',nw:r.nw||'',dial:r.dial||'',own:r.own||'',ct:r.ct||'',ac:r.ac||''}));plSave();plDraw();plMsg('Loaded '+PL.length+' channels.')}catch(x){plMsg('That file is not a channel plan saved from this guide.')}};rd.readAsText(f);e.target.value=''};
 $('#plCsv').onclick=()=>{const rows=PL.filter(r=>r.f&&!isNaN(parseFloat(r.f)));const seen={},dup=[];
   const out=['Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,RxDtcsCode,CrossMode,Mode,TStep,Skip,Power,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE'];
   rows.map(r=>{const loc=(Math.max(1,Math.min(10,+r.z||1))-1)*64+Math.max(1,Math.min(64,+r.c||1));if(seen[loc])dup.push(loc);seen[loc]=1;return[loc,r]}).sort((a,b)=>a[0]-b[0]).forEach(([loc,r])=>{
     const f=parseFloat(r.f),off=parseFloat(r.o)||0,tx=r.d==='+'?f+off:r.d==='-'?f-off:f,ok=inR(tx,TXR);
     const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
-    out.push([loc,q(r.n),f.toFixed(6),ok?r.d:'off',(ok&&r.d?off:0).toFixed(6),r.t?'Tone':'',r.t||'88.5',r.t||'88.5','023','NN','023','Tone->Tone',r.w==='Narrow'?'NFM':'FM','5.00','','',q(r.m),'','','',''].join(','))});
+    out.push([loc,q(r.n),f.toFixed(6),ok?r.d:'off',(ok&&r.d?off:0).toFixed(6),r.t?'Tone':'',r.t||'88.5',r.t||'88.5','023','NN','023','Tone->Tone',r.w==='Narrow'?'NFM':'FM','5.00','','',q([r.m,r.cs,r.nw,r.dial,r.own].filter(Boolean).join(' · ')),'','','',''].join(','))});
   if(!rows.length){plMsg('Nothing to export yet: add a frequency first.');return}
   dl('uv5rm-channel-plan.csv',out.join('\r\n')+'\r\n','text/csv');
   plMsg('Exported '+rows.length+' channels.'+(dup.length?' Warning: more than one row uses the same zone and channel (row '+[...new Set(dup)].join(', ')+').':'')+' Power is left for you to set in the software.')};
@@ -1709,7 +1750,7 @@ $('#rsAdd').onclick=()=>{const pick=$$('#rsT input[data-i]:checked').map(c=>RSL[
   const z=Math.max(1,Math.min(10,+$('#rsZone').value||3)),used=new Set(PL.filter(r=>+r.z===z).map(r=>+r.c)),names=new Set(PL.map(r=>(r.n||'').toUpperCase()));let c=1,n=0,skip=0;
   pick.forEach(r=>{if(PL.some(p=>+p.z===z&&parseFloat(p.f)===parseFloat(r.f)&&(p.t||'')===(r.t||''))){skip++;return}while(used.has(c))c++;if(c>64){skip++;return}used.add(c);
     let nm=(r.call||'RPT').toUpperCase().replace(/[^A-Z0-9 -]/g,'').slice(0,6)||'RPT';if(names.has(nm))nm=nm.slice(0,5)+(parseFloat(r.f)<200?'2':'7');let k=1;while(names.has(nm)&&k<10)nm=nm.slice(0,5)+(k++);names.add(nm);
-    PL.push({z,c,n:nm,f:r.f,d:r.d,o:r.d?r.o:'',t:r.t,p:'High',w:'Wide',m:('repeater: '+r.call+' '+r.loc+(r.mi?' ('+r.mi+' mi)':'')+(!r.t&&r.acc?' needs '+r.acc:'')).trim()});n++});
+    PL.push({z,c,n:nm,f:r.f,d:r.d,o:r.d?r.o:'',t:r.t,p:'High',w:'Wide',m:('repeater: '+r.call+' '+r.loc+(r.mi?' ('+r.mi+' mi)':'')+(!r.t&&r.acc?' needs '+r.acc:'')).trim(),cs:r.call||''});n++});
   plSave();plDraw();$('#rsAddMsg').textContent='Added '+n+' to Zone '+z+' of your channel plan.'+(skip?' Skipped '+skip+' (already there, or the zone is full).':'')};
 
 /* ---------- test log ---------- */
@@ -1855,12 +1896,15 @@ $('#lfHere').onclick=()=>{if(!navigator.geolocation){$('#lfOut').innerHTML='<p>T
   navigator.geolocation.getCurrentPosition(p=>{$('#lfA').value=p.coords.latitude.toFixed(4)+', '+p.coords.longitude.toFixed(4)},()=>{$('#lfOut').innerHTML='<p>Location was not shared. Type a town, ZIP, or the coordinates from the radio’s GPS screen instead.</p>'},{timeout:15000})};
 const lfTx=r=>inR(r[5]+r[6],TXR)&&inR(r[5],TXR);
 const lfDesc=(r,d)=>`<b>${esc(r[0])}</b> · <span class="n">${r[5].toFixed(3)}</span> ${r[6]?(r[6]<0?'−':'+')+Math.abs(r[6]).toFixed(3):'simplex'} · tone ${r[7]||'none listed'} · ${esc(r[3])} · ${d.toFixed(0)} mi${r[8]?' <span class="tag bad">location doubtful</span>':''}${r[6]===0?' <span class="tag">simplex node, short range</span>':''}`;
-function lfAdd(i){const r=LF.last[i];if(!r)return;const z=3,used=new Set(PL.filter(p=>+p.z===z).map(p=>+p.c)),names=new Set(PL.map(p=>(p.n||'').toUpperCase()));let c=1;while(used.has(c))c++;
+const netStr=r=>r[4].map(n=>n[0]+(n[1]?' '+n[1]:'')).join('; ');
+function lfAdd(i){const o=LF.last[i];if(!o)return;const r=o.r;const z=3,used=new Set(PL.filter(p=>+p.z===z).map(p=>+p.c)),names=new Set(PL.map(p=>(p.n||'').toUpperCase()));let c=1;while(used.has(c))c++;
   if(c>64){toast('Zone 3 of your channel plan is full.');return}
   if(PL.some(p=>+p.z===z&&parseFloat(p.f)===r[5])){toast('That repeater is already in Zone 3 of your channel plan.');return}
   let nm=r[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)||'RPT';let k=1;while(names.has(nm)&&k<10)nm=nm.slice(0,5)+(k++);
-  PL.push({z,c,n:nm,f:r[5].toFixed(3),d:r[6]>0?'+':r[6]<0?'-':'',o:r[6]?Math.abs(r[6]).toFixed(3):'',t:r[7],p:'High',w:'Wide',m:('link finder: '+r[3]+(r[4].length?' · '+r[4].map(n=>n[0]+(n[1]?' '+n[1]:'')).join(', '):'')).slice(0,120)});
-  plSave();plDraw();toast('Added '+nm+' to Zone 3 of your channel plan, channel '+c+'.')}
+  PL.push({z,c,n:nm,f:r[5].toFixed(3),d:r[6]>0?'+':r[6]<0?'-':'',o:r[6]?Math.abs(r[6]).toFixed(3):'',t:r[7],p:'High',w:'Wide',m:('link finder: '+r[3]).slice(0,120),cs:r[0],nw:netStr(r),
+    dial:!o.far?'':o.T==='WIN System'?'WIN System: talk to '+o.far[0]+', '+o.far[3]:(o.T==='AllStar'?'dial *3'+o.nB[1]:'dial '+o.nB[1])+' → '+o.far[0]+', '+o.far[3]+' ('+o.far[5].toFixed(3)+'); disconnect '+(o.T==='AllStar'?'*1'+o.nB[1]:o.T==='IRLP'?'73':'#'),own:'',ct:'',ac:''});
+  PLopen.add(PL[PL.length-1]);
+  plSave();plDraw();toast('Added '+nm+' to Zone 3 of your channel plan, channel '+c+'. Its details panel is open there for the owner and access notes.')}
 $('#lfGo').onclick=async()=>{const out=$('#lfOut');
   if(!LF.db){out.innerHTML='<div class="warn">Load the repeater data first (step 1).</div>';return}
   out.innerHTML='<p>Looking up places…</p>';
@@ -1873,15 +1917,15 @@ $('#lfGo').onclick=async()=>{const out=$('#lfOut');
   const pen=x=>(x.r[8]?60:0)+(x.r[6]===0?25:0);
   LF.last=[];const reg=r=>{LF.last.push(r);return LF.last.length-1};
   const opts=[];
-  R.filter(x=>x.a<=rA&&x.b<=rB&&lfTx(x.r)).sort((x,y)=>Math.max(x.a,x.b)+pen(x)-Math.max(y.a,y.b)-pen(y)).slice(0,3).forEach(x=>opts.push({score:Math.max(x.a,x.b)+pen(x),kind:'One repeater may cover both ends',html:`<p>${lfDesc(x.r,x.a)} from you, ${x.b.toFixed(0)} mi from the far end.</p><p>No linking needed, if both ends can actually hit it. Distance alone doesn't guarantee coverage: test it.</p>`,add:reg(x.r)}));
+  R.filter(x=>x.a<=rA&&x.b<=rB&&lfTx(x.r)).sort((x,y)=>Math.max(x.a,x.b)+pen(x)-Math.max(y.a,y.b)-pen(y)).slice(0,3).forEach(x=>opts.push({score:Math.max(x.a,x.b)+pen(x),kind:'One repeater may cover both ends',html:`<p>${lfDesc(x.r,x.a)} from you, ${x.b.toFixed(0)} mi from the far end.</p><p class="lfl">${lookLinks(x.r[0],netStr(x.r))}</p><p>No linking needed, if both ends can actually hit it. Distance alone doesn't guarantee coverage: test it.</p>`,add:reg({r:x.r})}));
   ['WIN System','IRLP','AllStar','EchoLink'].forEach(T=>{
     const has=x=>x.r[4].find(n=>n[0]===T);
     const a=nearA.filter(has).sort((x,y)=>x.a+pen(x)-y.a-pen(y)).slice(0,3),b=nearB.filter(has).sort((x,y)=>x.b+pen(x)-y.b-pen(y)).slice(0,3);
     a.forEach(x=>b.forEach(y=>{if(x.r===y.r)return;const nA=has(x),nB=has(y);if(T!=='WIN System'&&nA[1]===nB[1])return;
       const score=x.a*1.5+y.b+pen(x)+pen(y)+(T==='WIN System'?0:15);
       const how=T==='WIN System'?`<p><b>Then:</b> just talk. Repeaters on the WIN System are usually linked together full-time; check the system's site for which ones are linked today.</p>`
-        :`<p><b>Then:</b> key up, give your call sign, and while holding PTT dial ${T==='AllStar'?`<b>*3${esc(nB[1])}</b> (the usual AllStar connect command, <kbd>*</kbd><kbd>3</kbd> then the node number)`:T==='IRLP'?`<b>${esc(nB[1])}</b>, the IRLP node number`:`<b>${esc(nB[1])}</b>, the EchoLink node number (some repeaters want a prefix such as <kbd>*</kbd> first)`}. Disconnect when finished: ${T==='AllStar'?`usually <b>*1${esc(nB[1])}</b>`:T==='IRLP'?'usually <b>73</b>':'often <b>#</b>'}.</p><p>Codes vary between repeaters and many need an access code first, so ask the owner of ${esc(x.r[0])} before using the link.</p>${T==='EchoLink'?`<p>With a licence you can also connect from the EchoLink app to node ${esc(nB[1])}.</p>`:''}`;
-      opts.push({score,kind:'Via '+T,html:`<p><b>Your end:</b> ${lfDesc(x.r,x.a)}${T!=='WIN System'?' · '+T+' node '+esc(nA[1]):''}</p><p><b>Far end:</b> ${lfDesc(y.r,y.b)} from the destination${T!=='WIN System'?' · '+T+' node '+esc(nB[1]):''}</p>${how}`,add:reg(x.r)})}))});
+        :`<p><b>Then:</b> key up, give your call sign, and while holding PTT dial ${T==='AllStar'?`<b>*3${esc(nB[1])}</b> (the usual AllStar connect command, <kbd>*</kbd><kbd>3</kbd> then the node number)`:T==='IRLP'?`<b>${esc(nB[1])}</b>, the IRLP node number`:`<b>${esc(nB[1])}</b>, the EchoLink node number (some repeaters want a prefix such as <kbd>*</kbd> first)`}. Disconnect when finished: ${T==='AllStar'?`usually <b>*1${esc(nB[1])}</b>`:T==='IRLP'?'usually <b>73</b>':'often <b>#</b>'}.</p><p>Codes vary between repeaters and many need an access code first, so ask the owner of ${esc(x.r[0])} before using the link (see the lookup links above, and <a href="#far-owner">finding a repeater's owner</a>).</p>${T==='EchoLink'?`<p>With a licence you can also connect from the EchoLink app to node ${esc(nB[1])}.</p>`:''}`;
+      opts.push({score,kind:'Via '+T,html:`<p><b>Your end:</b> ${lfDesc(x.r,x.a)}${T!=='WIN System'?' · '+T+' node '+esc(nA[1]):''}</p><p class="lfl">${lookLinks(x.r[0],netStr(x.r))}</p><p><b>Far end:</b> ${lfDesc(y.r,y.b)} from the destination${T!=='WIN System'?' · '+T+' node '+esc(nB[1]):''}</p><p class="lfl">${lookLinks(y.r[0],netStr(y.r))}</p>${how}`,add:reg({r:x.r,far:y.r,T,nB})})}))});
   opts.sort((x,y)=>x.score-y.score);const seen=new Set(),top=opts.filter(o=>{const k=o.kind+o.html.slice(0,90);if(seen.has(k))return false;seen.add(k);return true}).slice(0,8);
   out.innerHTML=`<p><b>${esc(A.name)}</b> to <b>${esc(B.name)}</b>: ${apart.toFixed(0)} miles apart. ${nearA.length} repeaters within ${rA} mi of you that this radio can transmit into; ${nearB.length} within ${rB} mi of the far end.</p>`+
     (top.length?top.map((o,i)=>`<div class="blk lfo"><h4 style="margin-top:0">${i+1} · ${esc(o.kind)}</h4>${o.html}<p><button class="ib" data-lfa="${o.add}">Add my-end repeater to my channel plan</button></p></div>`).join('')
