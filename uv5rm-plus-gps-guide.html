@@ -206,6 +206,18 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 #toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:10px;max-width:min(560px,92vw);z-index:60;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 @media print{#toast{display:none}}
+.rptd{display:block;width:100%;min-width:540px;max-width:640px;height:auto;margin:10px auto;font:12.5px system-ui,sans-serif;fill:var(--ink)}
+.rptd .hill{fill:var(--code);stroke:var(--line);stroke-width:1.5}
+.rptd .twr{stroke:var(--ink);stroke-width:2.5;stroke-linecap:round}
+.rptd .dot{fill:var(--acc)}
+.rptd .rad{fill:var(--ink)}
+.rptd .up,.rptd .dn{stroke-width:2.5;stroke-dasharray:7 7;stroke-linecap:round;animation:flow 1s linear infinite}
+.rptd .up{stroke:var(--acc)}.rptd .dn{stroke:var(--acc2)}
+.rptd .blk0{stroke:var(--mute);stroke-width:2;stroke-dasharray:3 6}
+.rptd .x{fill:var(--acc);font-weight:800;font-size:15px}
+.rptd .b{font-weight:700}.rptd .m{fill:var(--mute);font-size:11.5px}
+@keyframes flow{to{stroke-dashoffset:-14}}
+@media (prefers-reduced-motion:reduce){.rptd .up,.rptd .dn{animation:none}}
 </style>
 </head>
 <body>
@@ -324,6 +336,17 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <li><b>Find where people are talking.</b> Hold <kbd>#</kbd> for two seconds to scan. When it stops on voices, hold <kbd>#</kbd> again to stay there, wait for a pause, and make your call.</li>
 <li><b>Try again every few minutes,</b> and in the first five minutes of each hour: by a common convention, that is when operators in remote areas listen on 146.520.</li>
 <li><b>Save the battery.</b> Switch off between attempts if help may be hours away.</li>
+</ol>
+</div>
+<div class="blk prk" id="quick-rpt" data-t="Emergency: using a repeater channel to reach further">
+<h3>If the radio has a repeater channel</h3>
+<p>A repeater is a relay station on a hill or tower that carries your voice ten times further. If the label or channel list names one, it is often your best chance of reaching someone.</p>
+<ol class="t" style="padding-left:1.3em">
+<li>Select that channel with <kbd>▲</kbd> <kbd>▼</kbd>. It is already set up; you don't need to change anything.</li>
+<li>Hold PTT, <b>wait a full second</b>, then make your emergency call. Let go.</li>
+<li><b>Listen for a short hiss or a beep right after you let go.</b> That means the repeater heard you and sent your call out. Silence means it didn't: move higher and try again, or try another channel.</li>
+<li>If people are already talking, wait for a gap and say <b>“Break, break, emergency.”</b> They will stop and answer you.</li>
+<li>Keep each transmission under a minute, then release and listen.</li>
 </ol>
 </div>
 <div class="blk prk" id="quick-stuck" data-t="Emergency: the radio isn't working (quick checks)">
@@ -461,6 +484,85 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <p class="note">Numbers follow the table in Baofeng's manual. The manual does not list a Program Channel item 16, and its worked examples use different numbers for some items, so your firmware may number things slightly differently.</p>
 </section>
 
+<section id="rpt" data-nav="How repeaters work">
+<h2>How repeaters work</h2>
+<div class="blk" id="rpt-idea" data-t="What a repeater is and why it extends your range">
+<h3>The idea</h3>
+<p>A handheld reaches a few miles because hills and buildings get in the way. A <b>repeater</b> is a radio station on a tower, tall building or mountain that listens on one frequency and instantly re-sends whatever it hears on another. Both of you only need to reach the repeater, not each other, so two handhelds on opposite sides of a hill can talk across a whole county.</p>
+<div class="tw"><svg class="rptd" viewBox="0 0 640 244" role="img" aria-label="Diagram: two handheld radios separated by a hill talk through a repeater on the hilltop. You transmit on the input frequency; the repeater re-sends on the output frequency.">
+<path d="M0,200 L190,200 Q320,56 450,200 L640,200 L640,244 L0,244 Z" class="hill"/>
+<line x1="320" y1="128" x2="320" y2="70" class="twr"/><path d="M308,128 L320,96 L332,128" class="twr" fill="none"/><circle cx="320" cy="68" r="5" class="dot"/>
+<rect x="62" y="172" width="14" height="28" rx="3" class="rad"/><line x1="66" y1="172" x2="66" y2="156" class="twr"/>
+<rect x="564" y="172" width="14" height="28" rx="3" class="rad"/><line x1="574" y1="172" x2="574" y2="156" class="twr"/>
+<line x1="72" y1="152" x2="312" y2="72" class="up"/><line x1="328" y1="72" x2="568" y2="152" class="dn"/>
+<line x1="84" y1="190" x2="216" y2="190" class="blk0"/><text x="226" y="195" class="x">✕</text>
+<text x="320" y="50" text-anchor="middle" class="b">Repeater</text>
+<text x="24" y="60" class="b">1 · You transmit on its input</text><text x="24" y="77">146.340 MHz, with tone 100.0</text>
+<text x="616" y="60" text-anchor="end" class="b">2 · It re-sends you on its output</text><text x="616" y="77" text-anchor="end">146.940 MHz</text>
+<text x="69" y="222" text-anchor="middle">You</text><text x="571" y="222" text-anchor="middle">Them</text>
+<text x="320" y="226" text-anchor="middle" class="m">the hill blocks the direct path</text>
+</svg></div>
+<p>Everyone <b>listens on the output</b> and <b>transmits on the input</b>. Your radio switches between the two automatically each time you press and release PTT; that is all a “repeater channel” is.</p>
+</div>
+<div class="blk" id="rpt-three" data-t="The three things a repeater channel needs: frequency, offset, tone">
+<h3>The three settings</h3>
+<div class="tw"><table>
+<tr><th>Setting</th><th>What it is</th><th>On this radio</th></tr>
+<tr><td><b>Frequency</b></td><td>The repeater's <b>output</b>: what you listen on. This is the number repeaters are known by.</td><td>The channel's receive frequency</td></tr>
+<tr><td><b>Offset (shift)</b></td><td>How far, and in which direction, your transmit frequency sits from the output. Usually 0.6 MHz on 2 m and 5 MHz on 70 cm. The direction (+ or −) depends on the repeater and the region.</td><td>Program Channel › TX Frequency (output plus or minus the offset)</td></tr>
+<tr><td><b>Tone</b></td><td>A low hum sent under your voice, too low to hear. The repeater ignores any signal without it, which stops interference from keying it up. It is a key, not privacy.</td><td>Program Channel › TX CTCSS</td></tr>
+</table></div>
+<p>Get any one of the three wrong and the repeater simply doesn't respond. A few repeaters use a DCS code instead of a tone (Program Channel › TX DCS), and some in Europe want a short 1750 Hz burst.</p>
+</div>
+<div class="blk" id="rpt-read" data-t="How to read a repeater listing such as 146.940 minus 100.0">
+<h3>Reading a listing</h3>
+<p>Directories and club pages write repeaters in a compact form:</p>
+<p style="font:600 1.05rem ui-monospace,Menlo,monospace">146.940&nbsp;&nbsp;−&nbsp;&nbsp;100.0&nbsp;&nbsp;W1ABC&nbsp;&nbsp;Mt Example&nbsp;&nbsp;OPEN</p>
+<ul class="t">
+<li><b>146.940</b>: listen here.</li>
+<li><b>−</b>: transmit <i>below</i> it by the standard offset, so 146.940 − 0.600 = <b>146.340</b>. A <b>+</b> means above.</li>
+<li><b>100.0</b>: the tone to send, in Hz. Also written “PL 100.0” or “CTCSS 100.0”.</li>
+<li><b>OPEN</b>: any licensed operator may use it. <b>CLOSED</b> or <b>PRIVATE</b> means members only; stay off those except in a real emergency.</li>
+</ul>
+<p>To put it in the radio, follow the <a href="#walk" data-wt="repeater">Program a repeater</a> walkthrough. To pull in the ones near you, use <a href="#emerg-rpt">Find repeaters near you</a>.</p>
+</div>
+<div class="blk" id="rpt-in" data-t="How to tell if you are getting into the repeater: tail, courtesy beep, silence">
+<h3>How to tell you're getting in</h3>
+<p>Press PTT, say your call sign and “testing”, and release. Then listen:</p>
+<div class="tw"><table>
+<tr><th>What you hear after releasing</th><th>What it means</th></tr>
+<tr><td>A second or two of quiet carrier, often ending in a beep or a short “pssht”</td><td><b>You got in.</b> That is the repeater's “tail”: it stays on the air briefly after you stop. The beep is the courtesy tone, telling the next person it's their turn.</td></tr>
+<tr><td>A voice or Morse code announcing a call sign</td><td>The repeater identifying itself, which it does every ten minutes or so while in use. Also proof you're in.</td></tr>
+<tr><td>Nothing at all</td><td>It didn't hear you: wrong tone, wrong offset or direction, too far away, or the repeater is off the air.</td></tr>
+</table></div>
+<ul class="t">
+<li><b>You can usually hear a repeater from further away than you can reach it.</b> It has more power and a far better antenna than your handheld. Hearing it clearly doesn't mean it hears you; move higher or outside.</li>
+<li><b>Pause before you speak.</b> Hold PTT for a full second first; the repeater takes a moment to wake up, and your first word is lost otherwise.</li>
+<li><b>If others say you're “scratchy” or “dropping out”</b>, your signal into the repeater is weak. Stand still, hold the radio upright and higher, switch to high power.</li>
+<li><b>Checking whether you need the repeater:</b> a short press of <kbd>✱</kbd> turns on reverse (R), so you listen on the input. If you can hear the other person there, you're in direct range and could move to a simplex channel.</li>
+</ul>
+</div>
+<div class="blk" id="rpt-linked" data-t="Linked repeater systems and nets">
+<h3>Linked systems and nets</h3>
+<ul class="t">
+<li><b>Linked repeaters:</b> many repeaters are joined to others by radio links or the internet (you'll see names like IRLP, EchoLink or AllStar in listings). What you say may come out on dozens of repeaters across a state or further. Leave a longer pause, two or three seconds, between transmissions so the links can keep up, and keep in mind how far your words travel.</li>
+<li><b>Nets:</b> scheduled on-air meetings run by a “net control” operator who calls on stations in turn. If you tune in during one, listen; when net control asks for check-ins or visitors, give your call sign. Don't start a separate conversation on top of a net.</li>
+<li><b>Emergency nets:</b> during a disaster a repeater may be handling emergency traffic. Listen and follow net control's instructions. Transmit only if you have an emergency yourself or are asked to. If you do: “Break, emergency”, then wait to be acknowledged.</li>
+<li><b>Time-out timers:</b> most repeaters cut off any single transmission after about three minutes. Keep each one short and let the repeater drop between them.</li>
+</ul>
+</div>
+<div class="blk" id="rpt-when" data-t="Repeater or simplex: when to use which">
+<h3>Repeater or simplex?</h3>
+<div class="tw"><table>
+<tr><th>Use simplex when</th><th>Use a repeater when</th></tr>
+<tr><td>You're within direct range of each other</td><td>Terrain or distance is in the way</td></tr>
+<tr><td>You want a quieter channel for a long chat</td><td>You want to reach anyone who's listening, not one person</td></tr>
+<tr><td>Repeaters are down, overloaded or reserved for emergency traffic</td><td>You need help and nobody answers on simplex</td></tr>
+</table></div>
+<p>Repeaters depend on power, a working site and a volunteer owner. They are the best tool for distance and the first thing to fail or fill up in a regional disaster, so a family plan should work on simplex first and treat the repeater as the extension. Etiquette for day-to-day use is under <a href="#onair-rpt">On-air basics</a>.</p>
+</div>
+</section>
+
 <section id="onair" data-nav="On-air basics">
 <h2>On-air basics</h2>
 <div class="g2">
@@ -476,6 +578,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 </div>
 <div class="blk" id="onair-rpt" data-t="Repeater etiquette">
 <h3>Using a repeater</h3>
+<p>New to repeaters? Start with <a href="#rpt">How repeaters work</a>.</p>
 <ul class="t">
 <li>Listen for a while before your first transmission to learn how that repeater's users talk.</li>
 <li>To announce yourself: <i>“K2XYZ, listening.”</i> Don't call CQ on a repeater.</li>
@@ -1429,6 +1532,10 @@ const GL=[
 ['Zone','A named group of up to 64 channels. The radio holds 10.'],
 ['Simplex','Radio to radio on one frequency, no repeater.'],
 ['Repeater','A station on a hill or tower that re-transmits you over a wide area. It listens on one frequency and transmits on another.'],
+['Input / output','A repeater\'s two frequencies: it listens on the input (you transmit there) and sends on the output (you listen there).'],
+['Courtesy tone / tail','The beep and brief carrier a repeater sends after you stop transmitting; proof it heard you.'],
+['Net','A scheduled on-air meeting on a repeater or frequency, run by a net control operator.'],
+['Linked repeater','A repeater joined to others by radio or internet links, so one transmission is heard on all of them.'],
 ['Offset / shift','The gap between a repeater\'s output and input frequencies, e.g. −0.600 MHz.'],
 ['CTCSS (also PL, tone, QT)','A sub-audible tone sent with your voice. Repeaters use it as a key; radios use it to ignore other users. It is not privacy.'],
 ['DCS','A digital version of CTCSS, written like D023N.'],
