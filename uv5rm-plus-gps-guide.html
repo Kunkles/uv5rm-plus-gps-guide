@@ -241,6 +241,7 @@ table.plan tr.pdet .lbf,table.plan tr.pdet .pdl{position:sticky;left:10px;max-wi
 table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:560px){table.plan tr.pdet .lbf{grid-template-columns:1fr}}
 .lfl{font-size:.85rem;color:var(--mute)}
+.dep{font-size:.85rem;color:var(--mute);margin:-.3em 0 .4em}.dep.bad{color:var(--acc)}.dep.bad::before{content:"⚠ "}
 </style>
 </head>
 <body>
@@ -621,6 +622,30 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 </div>
 </div>
 
+<div class="blk" id="far-how" data-t="How linked repeaters actually connect: internet nodes, radio links, and line of sight">
+<h3>How the links actually connect</h3>
+<p>Two repeaters far apart can't hear each other: hills and the curve of the earth are in the way. They are joined in one of two ways, and a third option skips linking altogether.</p>
+<div class="tw"><table>
+<tr><th>Kind</th><th>How it works</th><th>Needs</th></tr>
+<tr><td><b>Internet link</b><br>IRLP, AllStar, EchoLink</td><td>Each repeater has a small computer attached, its <b>node</b>, with an internet connection. Your radio reaches your local repeater by radio as usual. When you dial the far node's number, the two nodes open a connection over the internet, much like a phone call. The far repeater broadcasts your voice by radio to anyone near it, and replies come back the same way. The connection lasts until someone sends the disconnect code; a few owners keep some links up permanently.</td><td>Power and internet at <b>both</b> repeater sites</td></tr>
+<tr><td><b>Radio-linked system</b><br>such as the WIN System</td><td>Repeaters are joined by dedicated link radios between mountaintops, on separate frequencies from the ones you use, often with internet connections filling gaps. Usually connected all the time, so there's nothing to dial.</td><td>Power at every site along the chain, and any internet hops working. Ask the system which links are radio.</td></tr>
+<tr><td><b>One high repeater</b></td><td>No linking at all: a single repeater on a site high enough that both places can reach it.</td><td>Power at that one site, and both ends actually within its range</td></tr>
+</table></div>
+<p>In every case radio is used only at the ends, between each handheld and its nearby repeater. The long middle part travels over the internet or the link radios.</p>
+<p>A repeater listed with a node may have that node offline. The IRLP and AllStar node pages the link finder links to show whether a node is currently online.</p>
+</div>
+<div class="blk" id="far-down" data-t="When the internet is down: reaching a distant area in a real emergency">
+<h3>When the internet is down</h3>
+<p>In a regional disaster, power and internet are often the first things to fail, and every <b>internet-linked</b> path in the link finder fails with them. Plan as if that will happen. What still works:</p>
+<ul class="t">
+<li><b>Simplex and nearby repeaters on backup power.</b> Many club and emergency-service repeaters have batteries or generators. Find out which ones near you do, from the clubs, and put them first in your plan.</li>
+<li><b>Radio-linked systems</b>, as long as every site in the chain has backup power and the links in your direction are radio rather than internet.</li>
+<li><b>Relaying through people.</b> Someone at the edge of your area can pass your message to someone further on, station to station. This is what emergency nets do.</li>
+<li><b>Emergency nets.</b> ARES and RACES groups (amateur emergency volunteers working with local government) run nets during disasters and pass written messages, sometimes hop by hop across the state. Listen for net control on local repeaters and ask them to send a message to the distant town.</li>
+<li><b>HF radio.</b> The proper tool for hundreds of miles with no infrastructure, bouncing signals off the upper atmosphere. It needs a different radio and a General class licence, one step above Technician. Emergency groups also use Winlink, email sent over HF radio, for exactly this.</li>
+</ul>
+<p><b>What this means for a family plan:</b> a handheld like this one reliably covers your local area. For someone in another region, agree ahead of time on an out-of-area phone or text contact (calls between regions often get through when local calls don't), and treat a radio link to them as a bonus. Expect a message to arrive relayed and written, not as a live conversation.</p>
+</div>
 <div class="blk" id="far-owner" data-t="Finding a repeater's owner or trustee, and getting link access codes">
 <h3>Finding a repeater's owner</h3>
 <p>The owner, or “trustee”, is usually whoever holds the call sign the repeater identifies with, often a radio club. To find them:</p>
@@ -1917,7 +1942,7 @@ $('#lfGo').onclick=async()=>{const out=$('#lfOut');
   const pen=x=>(x.r[8]?60:0)+(x.r[6]===0?25:0);
   LF.last=[];const reg=r=>{LF.last.push(r);return LF.last.length-1};
   const opts=[];
-  R.filter(x=>x.a<=rA&&x.b<=rB&&lfTx(x.r)).sort((x,y)=>Math.max(x.a,x.b)+pen(x)-Math.max(y.a,y.b)-pen(y)).slice(0,3).forEach(x=>opts.push({score:Math.max(x.a,x.b)+pen(x),kind:'One repeater may cover both ends',html:`<p>${lfDesc(x.r,x.a)} from you, ${x.b.toFixed(0)} mi from the far end.</p><p class="lfl">${lookLinks(x.r[0],netStr(x.r))}</p><p>No linking needed, if both ends can actually hit it. Distance alone doesn't guarantee coverage: test it.</p>`,add:reg({r:x.r})}));
+  R.filter(x=>x.a<=rA&&x.b<=rB&&lfTx(x.r)).sort((x,y)=>Math.max(x.a,x.b)+pen(x)-Math.max(y.a,y.b)-pen(y)).slice(0,3).forEach(x=>opts.push({score:Math.max(x.a,x.b)+pen(x),kind:'One repeater may cover both ends',dep:'No internet needed: just that one repeater, with power, and both ends in range',html:`<p>${lfDesc(x.r,x.a)} from you, ${x.b.toFixed(0)} mi from the far end.</p><p class="lfl">${lookLinks(x.r[0],netStr(x.r))}</p><p>No linking needed, if both ends can actually hit it. Distance alone doesn't guarantee coverage: test it.</p>`,add:reg({r:x.r})}));
   ['WIN System','IRLP','AllStar','EchoLink'].forEach(T=>{
     const has=x=>x.r[4].find(n=>n[0]===T);
     const a=nearA.filter(has).sort((x,y)=>x.a+pen(x)-y.a-pen(y)).slice(0,3),b=nearB.filter(has).sort((x,y)=>x.b+pen(x)-y.b-pen(y)).slice(0,3);
@@ -1925,12 +1950,12 @@ $('#lfGo').onclick=async()=>{const out=$('#lfOut');
       const score=x.a*1.5+y.b+pen(x)+pen(y)+(T==='WIN System'?0:15);
       const how=T==='WIN System'?`<p><b>Then:</b> just talk. Repeaters on the WIN System are usually linked together full-time; check the system's site for which ones are linked today.</p>`
         :`<p><b>Then:</b> key up, give your call sign, and while holding PTT dial ${T==='AllStar'?`<b>*3${esc(nB[1])}</b> (the usual AllStar connect command, <kbd>*</kbd><kbd>3</kbd> then the node number)`:T==='IRLP'?`<b>${esc(nB[1])}</b>, the IRLP node number`:`<b>${esc(nB[1])}</b>, the EchoLink node number (some repeaters want a prefix such as <kbd>*</kbd> first)`}. Disconnect when finished: ${T==='AllStar'?`usually <b>*1${esc(nB[1])}</b>`:T==='IRLP'?'usually <b>73</b>':'often <b>#</b>'}.</p><p>Codes vary between repeaters and many need an access code first, so ask the owner of ${esc(x.r[0])} before using the link (see the lookup links above, and <a href="#far-owner">finding a repeater's owner</a>).</p>${T==='EchoLink'?`<p>With a licence you can also connect from the EchoLink app to node ${esc(nB[1])}.</p>`:''}`;
-      opts.push({score,kind:'Via '+T,html:`<p><b>Your end:</b> ${lfDesc(x.r,x.a)}${T!=='WIN System'?' · '+T+' node '+esc(nA[1]):''}</p><p class="lfl">${lookLinks(x.r[0],netStr(x.r))}</p><p><b>Far end:</b> ${lfDesc(y.r,y.b)} from the destination${T!=='WIN System'?' · '+T+' node '+esc(nB[1]):''}</p><p class="lfl">${lookLinks(y.r[0],netStr(y.r))}</p>${how}`,add:reg({r:x.r,far:y.r,T,nB})})}))});
+      opts.push({score,kind:'Via '+T,dep:T==='WIN System'?'Depends on every site in the chain having power; some links may use the internet':'Needs power and internet at both repeaters: likely to fail in a regional outage',html:`<p><b>Your end:</b> ${lfDesc(x.r,x.a)}${T!=='WIN System'?' · '+T+' node '+esc(nA[1]):''}</p><p class="lfl">${lookLinks(x.r[0],netStr(x.r))}</p><p><b>Far end:</b> ${lfDesc(y.r,y.b)} from the destination${T!=='WIN System'?' · '+T+' node '+esc(nB[1]):''}</p><p class="lfl">${lookLinks(y.r[0],netStr(y.r))}</p>${how}`,add:reg({r:x.r,far:y.r,T,nB})})}))});
   opts.sort((x,y)=>x.score-y.score);const seen=new Set(),top=opts.filter(o=>{const k=o.kind+o.html.slice(0,90);if(seen.has(k))return false;seen.add(k);return true}).slice(0,8);
   out.innerHTML=`<p><b>${esc(A.name)}</b> to <b>${esc(B.name)}</b>: ${apart.toFixed(0)} miles apart. ${nearA.length} repeaters within ${rA} mi of you that this radio can transmit into; ${nearB.length} within ${rB} mi of the far end.</p>`+
-    (top.length?top.map((o,i)=>`<div class="blk lfo"><h4 style="margin-top:0">${i+1} · ${esc(o.kind)}</h4>${o.html}<p><button class="ib" data-lfa="${o.add}">Add my-end repeater to my channel plan</button></p></div>`).join('')
+    (top.length?top.map((o,i)=>`<div class="blk lfo"><h4 style="margin-top:0">${i+1} · ${esc(o.kind)}</h4><p class="dep${/internet at both/.test(o.dep)?' bad':''}">${esc(o.dep)}</p>${o.html}<p><button class="ib" data-lfa="${o.add}">Add my-end repeater to my channel plan</button></p></div>`).join('')
       :`<div class="warn">No linked path found with these distances. Try a larger reach, a nearby bigger town as the destination, the EchoLink app, or ask on a local net.</div>`)+
-    `<p style="color:var(--mute);font-size:.9rem">Based on HearHam's listings, which can be out of date or have wrong locations. Before relying on a path, listen to both repeaters and confirm the node numbers with their owners. Linking means transmitting, which needs a licence outside a genuine emergency.</p>`};
+    `<p style="color:var(--mute);font-size:.9rem">Based on HearHam's listings, which can be out of date or have wrong locations. Before relying on a path, listen to both repeaters and confirm the node numbers with their owners. Linking means transmitting, which needs a licence outside a genuine emergency. Internet links may not work in a disaster: see <a href="#far-down">when the internet is down</a>.</p>`};
 $('#lfOut').addEventListener('click',e=>{const b=e.target.closest('[data-lfa]');if(b)lfAdd(+b.dataset.lfa)});
 idb('readonly',s=>s.get('rptDB')).then(d=>{if(d&&d.recs)LF.db=d;lfStat()}).catch(()=>lfStat());
 
