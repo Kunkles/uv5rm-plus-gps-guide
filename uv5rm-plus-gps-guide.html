@@ -232,6 +232,7 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 .rptd .b{font-weight:700}.rptd .m{fill:var(--mute);font-size:11.5px}
 @keyframes flow{to{stroke-dashoffset:-14}}
 @media (prefers-reduced-motion:reduce){.rptd .up,.rptd .dn{animation:none}}
+.lfo{margin:10px 0}.lfo p{margin:.35em 0}
 </style>
 </head>
 <body>
@@ -584,6 +585,59 @@ table.fill td:nth-child(odd){width:22%;color:var(--mute);font-size:.82rem}
 <tr><td>Repeaters are down, overloaded or reserved for emergency traffic</td><td>You need help and nobody answers on simplex</td></tr>
 </table></div>
 <p>Repeaters depend on power, a working site and a volunteer owner. They are the best tool for distance and the first thing to fail or fill up in a regional disaster, so a family plan should work on simplex first and treat the repeater as the extension. Etiquette for day-to-day use is under <a href="#onair-rpt">On-air basics</a>.</p>
+</div>
+</section>
+
+<section id="far" data-nav="Reaching a distant area">
+<h2>Reaching a distant area</h2>
+<p>A handheld reaches a repeater 20–60 miles away at best. To talk to someone in a town hundreds of miles off, you need repeaters that are <b>linked</b> to other repeaters, so what goes into one comes out of the other.</p>
+<div class="g2">
+<div class="blk" id="far-net" data-t="Internet-linked repeaters: IRLP, EchoLink, AllStar node numbers">
+<h3>1 · Internet-linked repeaters</h3>
+<p>Many repeaters have an <b>IRLP</b>, <b>EchoLink</b> or <b>AllStar</b> node. From a local repeater with a node you can connect to another node anywhere by dialling its number: hold PTT and press the digits, which the radio sends as DTMF tones.</p>
+<ul class="t">
+<li>Find a linked repeater near you and one near the destination <b>on the same network</b>: IRLP to IRLP, AllStar to AllStar, EchoLink to EchoLink.</li>
+<li>Most owners only let members or control operators bring up a link, and many use an access code before the node number. Ask the owner or on the air first.</li>
+<li>With a licence you can skip your radio: the <b>EchoLink app</b> on a phone or computer connects straight to any EchoLink node.</li>
+</ul>
+</div>
+<div class="blk" id="far-sys" data-t="Wide-area linked repeater systems such as the WIN System">
+<h3>2 · Wide-area linked systems</h3>
+<p>Some networks join dozens of repeaters by radio links, so one transmission is heard on all of them with no dialling. The WIN System in California is one example. If both ends can reach a repeater on the same system, you can talk.</p>
+<p>Listings mention these as “linked to …” or name the system. Check the system's own website for which sites are currently linked.</p>
+</div>
+<div class="blk" id="far-ask" data-t="Finding a path by asking on the air, and relaying in an emergency">
+<h3>3 · Ask, or relay</h3>
+<p>On a local net, “can anyone link to the Fresno area?” is a normal question, and the people who answer know which links work today.</p>
+<p><b>In an emergency</b> you rarely need the distance: call locally, and ask whoever answers to relay your message or phone someone in the distant town for you.</p>
+</div>
+</div>
+
+<div class="blk" id="far-tool" data-t="Link finder: automatically find repeaters that connect your area to a distant town">
+<h3>Link finder</h3>
+<p>Type where you are and where you want to reach. The finder looks for a linked repeater within reach of each end on the same network, and for any single repeater that might cover both.</p>
+
+<h4>1 · Repeater data</h4>
+<p id="lfStat" style="font-weight:600"></p>
+<div id="lfLoad">
+<p>The finder uses HearHam's open repeater list (about 9.6&nbsp;MB, roughly 23,000 repeaters worldwide, about 14,500 of them in the lower 48 states). It is less complete than RepeaterBook, so a missing repeater may still exist. The guide can't download it for you, because HearHam doesn't allow other pages to fetch it, so it takes two steps, once:</p>
+<ol class="t" style="padding-left:1.3em">
+<li><a href="https://hearham.com/api/repeaters/v1" target="_blank" rel="noopener">Open HearHam's repeater list ↗</a>. The page fills with text. Save it: <kbd>Cmd</kbd>+<kbd>S</kbd> on a Mac, <kbd>Ctrl</kbd>+<kbd>S</kbd> on Windows. In Safari choose the <b>Page Source</b> format.</li>
+<li><label class="ib" style="cursor:pointer;display:inline-block">Load the saved file<input type="file" id="lfFile" accept=".json,.txt,application/json,text/plain" hidden></label></li>
+</ol>
+<p style="color:var(--mute);font-size:.9rem">It is then kept in this browser and works offline. Repeat every few months to pick up changes. The file stays on your computer; nothing is uploaded.</p>
+</div>
+
+<h4>2 · Where from and where to</h4>
+<div class="lbf">
+<label>From (town, ZIP or “lat, lon”) <input id="lfA" placeholder="Your town, ST"></label>
+<label>To (town, ZIP or “lat, lon”) <input id="lfB" placeholder="Town you want to reach"></label>
+<label>Reach from your end (miles) <input id="lfRA" type="number" min="5" max="80" value="35"></label>
+<label>Reach at the far end (miles) <input id="lfRB" type="number" min="5" max="80" value="40"></label>
+</div>
+<p><button class="ib" id="lfHere">Use my location for “From”</button> <button class="ib go" id="lfGo" style="background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700">Find connections</button></p>
+<p style="color:var(--mute);font-size:.9rem">Town names are looked up in the repeater list first, offline. If a town isn't there, a ZIP code is looked up at zippopotam.us and a town name at openstreetmap.org, which needs internet and sends what you typed to that site. “Reach” is how far a repeater can be and still hear you: 20–40 miles to a mountaintop is typical for a handheld outdoors.</p>
+<div id="lfOut"></div>
 </div>
 </section>
 
@@ -1742,6 +1796,99 @@ $('#asStop').onclick=async()=>{clearTimeout(AS.t);AS.on=false;AS.need=false;AS.d
 $('#as').onclick=()=>{if(!AS.dir)asPick();else if(AS.need||AS.err)asConnect(AS.dir,true);else flash($('#start-data'))};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AS.on)asSync().then(asUI)});
 if(AS.ok)idb('readonly',s=>s.get('dir')).then(h=>{if(h)asConnect(h,false);else asUI()}).catch(()=>asUI());else asUI();
+
+/* ---------- link finder (HearHam data, kept locally in IndexedDB) ---------- */
+const LF={db:null};
+const miles=(a,b,c,d)=>{const p=Math.PI/180,x=Math.sin((c-a)*p/2)**2+Math.cos(a*p)*Math.cos(c*p)*Math.sin((d-b)*p/2)**2;return 7917.6*Math.asin(Math.sqrt(x))};
+const cityKey=c=>String(c||'').split(',')[0].toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+const placeKey=c=>String(c||'').toLowerCase().replace(/\s+/g,' ').trim();
+const STATES={};'al alabama,ak alaska,az arizona,ar arkansas,ca california,co colorado,ct connecticut,de delaware,fl florida,ga georgia,hi hawaii,id idaho,il illinois,in indiana,ia iowa,ks kansas,ky kentucky,la louisiana,me maine,md maryland,ma massachusetts,mi michigan,mn minnesota,ms mississippi,mo missouri,mt montana,ne nebraska,nv nevada,nh new hampshire,nj new jersey,nm new mexico,ny new york,nc north carolina,nd north dakota,oh ohio,ok oklahoma,or oregon,pa pennsylvania,ri rhode island,sc south carolina,sd south dakota,tn tennessee,tx texas,ut utah,vt vermont,va virginia,wa washington,wv west virginia,wi wisconsin,wy wyoming,dc district of columbia'.split(',').forEach(x=>{const a=x.slice(0,2),n=x.slice(3);STATES[a]=n;STATES[n]=a});
+const inState=(city,st)=>{const rest=' '+city.toLowerCase().split(',').slice(1).join(' ').replace(/[^a-z ]/g,' ').replace(/\s+/g,' ')+' ';return [st,STATES[st]].filter(Boolean).some(v=>rest.includes(' '+v+' '))};
+/* records: [call,lat,lon,city,nets,fMHz,offMHz,tone,doubtful]; nets: [[type,node],...] */
+function lfBuild(arr){
+  const med=a=>{const b=a.slice().sort((x,y)=>x-y),n=b.length;return n%2?b[(n-1)/2]:(b[n/2-1]+b[n/2])/2};
+  const byPlace={},byCity={},recs=[];
+  arr.forEach(x=>{if(typeof x.latitude!=='number'||typeof x.longitude!=='number')return;
+    const pk=placeKey(x.city),ck=cityKey(x.city);
+    if(pk){(byPlace[pk]||(byPlace[pk]={n:x.city,la:[],lo:[]})).la.push(x.latitude);byPlace[pk].lo.push(x.longitude)}
+    if(ck){(byCity[ck]||(byCity[ck]={la:[],lo:[]})).la.push(x.latitude);byCity[ck].lo.push(x.longitude)}});
+  const cityMed={};Object.entries(byCity).forEach(([k,v])=>{if(v.la.length>=3)cityMed[k]=[med(v.la),med(v.lo)]});
+  arr.forEach(x=>{
+    if(x.operational!==1||typeof x.latitude!=='number')return;
+    const mode=String(x.mode||'').toUpperCase();if(!/FM/.test(mode))return;
+    const f=(+x.frequency||0)/1e6,off=(+x.offset||0)/1e6;if(!inR(f,RXR))return;
+    const g=String(x.group||'').trim(),node=String(x.internet_node||'').trim(),desc=String(x.description||''),nets=[];
+    if(g==='IRLP'&&node)nets.push(['IRLP',node]);
+    if(/^allstar$/i.test(g)&&node)nets.push(['AllStar',node]);
+    if(!g&&node&&/IRLP/i.test(desc))nets.push(['IRLP',node]);
+    let m=/echo\s*link\D{0,12}(\d{3,7})/i.exec(desc);if(m)nets.push(['EchoLink',m[1]]);
+    m=/IRLP\D{0,12}(\d{4,5})/i.exec(desc);if(m&&!nets.some(n=>n[0]==='IRLP'))nets.push(['IRLP',m[1]]);
+    if(g==='WIN')nets.push(['WIN System','']);
+    const t=(+x.encode||0).toFixed(1),tone=CTC.includes(t)?t:'';
+    const c=cityMed[cityKey(x.city)],doubt=c&&miles(x.latitude,x.longitude,c[0],c[1])>40?1:0;
+    recs.push([String(x.callsign||'').trim(),+x.latitude.toFixed(4),+x.longitude.toFixed(4),String(x.city||'').trim(),nets,+f.toFixed(4),+off.toFixed(4),tone,doubt]);
+  });
+  const pl={};Object.entries(byPlace).forEach(([k,v])=>{pl[k]=[+med(v.la).toFixed(4),+med(v.lo).toFixed(4),v.la.length,v.n]});
+  return{ts:Date.now(),recs,places:pl}}
+function lfStat(){const s=$('#lfStat');if(!LF.db){s.textContent='No repeater data loaded yet.';$('#lfLoad').hidden=false;return}
+  const linked=LF.db.recs.filter(r=>r[4].length).length;
+  s.innerHTML=`Repeater data: ${LF.db.recs.length.toLocaleString()} FM repeaters (${linked.toLocaleString()} linked), loaded ${new Date(LF.db.ts).toLocaleDateString()}. <button class="ib" id="lfRe">Load newer data</button>`;
+  $('#lfLoad').hidden=true;$('#lfRe').onclick=()=>{$('#lfLoad').hidden=false}}
+$('#lfFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();$('#lfStat').textContent='Reading the file…';
+  rd.onload=async()=>{try{let t=String(rd.result);const i=t.indexOf('[');if(i>0)t=t.slice(i,t.lastIndexOf(']')+1);const arr=JSON.parse(t);if(!Array.isArray(arr)||!arr.length||!('frequency' in arr[0]))throw 0;
+      LF.db=lfBuild(arr);try{await idb('readwrite',s=>s.put(LF.db,'rptDB'))}catch(x){}lfStat()}
+    catch(x){$('#lfStat').textContent='That file isn’t HearHam’s repeater list. Save the page as plain text or “Page Source”, not as a web archive, and try again.'}};
+  rd.readAsText(f);e.target.value=''};
+async function lfPlace(q){q=String(q||'').trim();if(!q)return null;
+  let m=/^(-?\d{1,2}(?:\.\d+)?)[,\s]+(-?\d{1,3}(?:\.\d+)?)$/.exec(q);if(m)return{lat:+m[1],lon:+m[2],name:'coordinates '+q,src:'typed'};
+  let fallback=null;
+  if(LF.db&&!/^\d{5}$/.test(q)){const k=cityKey(q),st=q.split(',').slice(1).join(' ').toLowerCase().replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
+    let c=Object.values(LF.db.places).filter(p=>cityKey(p[3])===k);
+    const pick=c2=>{c2.sort((a,b)=>b[2]-a[2]);const t=c2[0],cl=c2.filter(p=>miles(p[0],p[1],t[0],t[1])<30),n=cl.reduce((s,p)=>s+p[2],0);
+      return{lat:cl.reduce((s,p)=>s+p[0]*p[2],0)/n,lon:cl.reduce((s,p)=>s+p[1]*p[2],0)/n,name:t[3],src:'repeater list'}};
+    if(c.length){const f=st?c.filter(p=>inState(p[3],st)):c;if(f.length)return pick(f);fallback=pick(c)}}
+  try{if(/^\d{5}$/.test(q)){const r=await fetch('https://api.zippopotam.us/us/'+q);if(r.ok){const j=await r.json(),p=j.places[0];return{lat:+p.latitude,lon:+p.longitude,name:p['place name']+', '+p['state abbreviation']+' '+q,src:'zippopotam.us'}}}
+    else{const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q));if(r.ok){const j=await r.json();if(j[0])return{lat:+j[0].lat,lon:+j[0].lon,name:j[0].display_name.split(',').slice(0,3).join(','),src:'openstreetmap.org'}}}}
+  catch(x){return fallback||{err:'offline'}}
+  return fallback}
+$('#lfHere').onclick=()=>{if(!navigator.geolocation){$('#lfOut').innerHTML='<p>This browser can’t share your location.</p>';return}
+  navigator.geolocation.getCurrentPosition(p=>{$('#lfA').value=p.coords.latitude.toFixed(4)+', '+p.coords.longitude.toFixed(4)},()=>{$('#lfOut').innerHTML='<p>Location was not shared. Type a town, ZIP, or the coordinates from the radio’s GPS screen instead.</p>'},{timeout:15000})};
+const lfTx=r=>inR(r[5]+r[6],TXR)&&inR(r[5],TXR);
+const lfDesc=(r,d)=>`<b>${esc(r[0])}</b> · <span class="n">${r[5].toFixed(3)}</span> ${r[6]?(r[6]<0?'−':'+')+Math.abs(r[6]).toFixed(3):'simplex'} · tone ${r[7]||'none listed'} · ${esc(r[3])} · ${d.toFixed(0)} mi${r[8]?' <span class="tag bad">location doubtful</span>':''}${r[6]===0?' <span class="tag">simplex node, short range</span>':''}`;
+function lfAdd(i){const r=LF.last[i];if(!r)return;const z=3,used=new Set(PL.filter(p=>+p.z===z).map(p=>+p.c)),names=new Set(PL.map(p=>(p.n||'').toUpperCase()));let c=1;while(used.has(c))c++;
+  if(c>64){toast('Zone 3 of your channel plan is full.');return}
+  if(PL.some(p=>+p.z===z&&parseFloat(p.f)===r[5])){toast('That repeater is already in Zone 3 of your channel plan.');return}
+  let nm=r[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6)||'RPT';let k=1;while(names.has(nm)&&k<10)nm=nm.slice(0,5)+(k++);
+  PL.push({z,c,n:nm,f:r[5].toFixed(3),d:r[6]>0?'+':r[6]<0?'-':'',o:r[6]?Math.abs(r[6]).toFixed(3):'',t:r[7],p:'High',w:'Wide',m:('link finder: '+r[3]+(r[4].length?' · '+r[4].map(n=>n[0]+(n[1]?' '+n[1]:'')).join(', '):'')).slice(0,120)});
+  plSave();plDraw();toast('Added '+nm+' to Zone 3 of your channel plan, channel '+c+'.')}
+$('#lfGo').onclick=async()=>{const out=$('#lfOut');
+  if(!LF.db){out.innerHTML='<div class="warn">Load the repeater data first (step 1).</div>';return}
+  out.innerHTML='<p>Looking up places…</p>';
+  const A=await lfPlace($('#lfA').value),B=await lfPlace($('#lfB').value);
+  const bad=(p,w)=>!p?`Couldn’t find “${esc($('#lf'+w).value||'(empty)')}”. Try “Town, ST”, a ZIP code, or coordinates.`:p.err?`Couldn’t look up “${esc($('#lf'+w).value)}” without internet. Try a town listed in the repeater data, or coordinates.`:'';
+  if(bad(A,'A')||bad(B,'B')){out.innerHTML='<div class="warn">'+[bad(A,'A'),bad(B,'B')].filter(Boolean).join('<br>')+'</div>';return}
+  const rA=Math.max(5,Math.min(80,+$('#lfRA').value||35)),rB=Math.max(5,Math.min(80,+$('#lfRB').value||40)),apart=miles(A.lat,A.lon,B.lat,B.lon);
+  const R=LF.db.recs.map(r=>({r,a:miles(A.lat,A.lon,r[1],r[2]),b:miles(B.lat,B.lon,r[1],r[2])}));
+  const nearA=R.filter(x=>x.a<=rA&&lfTx(x.r)),nearB=R.filter(x=>x.b<=rB);
+  const pen=x=>(x.r[8]?60:0)+(x.r[6]===0?25:0);
+  LF.last=[];const reg=r=>{LF.last.push(r);return LF.last.length-1};
+  const opts=[];
+  R.filter(x=>x.a<=rA&&x.b<=rB&&lfTx(x.r)).sort((x,y)=>Math.max(x.a,x.b)+pen(x)-Math.max(y.a,y.b)-pen(y)).slice(0,3).forEach(x=>opts.push({score:Math.max(x.a,x.b)+pen(x),kind:'One repeater may cover both ends',html:`<p>${lfDesc(x.r,x.a)} from you, ${x.b.toFixed(0)} mi from the far end.</p><p>No linking needed, if both ends can actually hit it. Distance alone doesn't guarantee coverage: test it.</p>`,add:reg(x.r)}));
+  ['WIN System','IRLP','AllStar','EchoLink'].forEach(T=>{
+    const has=x=>x.r[4].find(n=>n[0]===T);
+    const a=nearA.filter(has).sort((x,y)=>x.a+pen(x)-y.a-pen(y)).slice(0,3),b=nearB.filter(has).sort((x,y)=>x.b+pen(x)-y.b-pen(y)).slice(0,3);
+    a.forEach(x=>b.forEach(y=>{if(x.r===y.r)return;const nA=has(x),nB=has(y);if(T!=='WIN System'&&nA[1]===nB[1])return;
+      const score=x.a*1.5+y.b+pen(x)+pen(y)+(T==='WIN System'?0:15);
+      const how=T==='WIN System'?`<p><b>Then:</b> just talk. Repeaters on the WIN System are usually linked together full-time; check the system's site for which ones are linked today.</p>`
+        :`<p><b>Then:</b> key up, give your call sign, and while holding PTT dial ${T==='AllStar'?`<b>*3${esc(nB[1])}</b> (the usual AllStar connect command, <kbd>*</kbd><kbd>3</kbd> then the node number)`:T==='IRLP'?`<b>${esc(nB[1])}</b>, the IRLP node number`:`<b>${esc(nB[1])}</b>, the EchoLink node number (some repeaters want a prefix such as <kbd>*</kbd> first)`}. Disconnect when finished: ${T==='AllStar'?`usually <b>*1${esc(nB[1])}</b>`:T==='IRLP'?'usually <b>73</b>':'often <b>#</b>'}.</p><p>Codes vary between repeaters and many need an access code first, so ask the owner of ${esc(x.r[0])} before using the link.</p>${T==='EchoLink'?`<p>With a licence you can also connect from the EchoLink app to node ${esc(nB[1])}.</p>`:''}`;
+      opts.push({score,kind:'Via '+T,html:`<p><b>Your end:</b> ${lfDesc(x.r,x.a)}${T!=='WIN System'?' · '+T+' node '+esc(nA[1]):''}</p><p><b>Far end:</b> ${lfDesc(y.r,y.b)} from the destination${T!=='WIN System'?' · '+T+' node '+esc(nB[1]):''}</p>${how}`,add:reg(x.r)})}))});
+  opts.sort((x,y)=>x.score-y.score);const seen=new Set(),top=opts.filter(o=>{const k=o.kind+o.html.slice(0,90);if(seen.has(k))return false;seen.add(k);return true}).slice(0,8);
+  out.innerHTML=`<p><b>${esc(A.name)}</b> to <b>${esc(B.name)}</b>: ${apart.toFixed(0)} miles apart. ${nearA.length} repeaters within ${rA} mi of you that this radio can transmit into; ${nearB.length} within ${rB} mi of the far end.</p>`+
+    (top.length?top.map((o,i)=>`<div class="blk lfo"><h4 style="margin-top:0">${i+1} · ${esc(o.kind)}</h4>${o.html}<p><button class="ib" data-lfa="${o.add}">Add my-end repeater to my channel plan</button></p></div>`).join('')
+      :`<div class="warn">No linked path found with these distances. Try a larger reach, a nearby bigger town as the destination, the EchoLink app, or ask on a local net.</div>`)+
+    `<p style="color:var(--mute);font-size:.9rem">Based on HearHam's listings, which can be out of date or have wrong locations. Before relying on a path, listen to both repeaters and confirm the node numbers with their owners. Linking means transmitting, which needs a licence outside a genuine emergency.</p>`};
+$('#lfOut').addEventListener('click',e=>{const b=e.target.closest('[data-lfa]');if(b)lfAdd(+b.dataset.lfa)});
+idb('readonly',s=>s.get('rptDB')).then(d=>{if(d&&d.recs)LF.db=d;lfStat()}).catch(()=>lfStat());
 
 /* ---------- nav ---------- */
 const secs=$$('section[data-nav]');
