@@ -433,7 +433,13 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 </div>
 <div class="blk" id="setup-first" data-t="First power-on checklist and recommended settings">
 <h3>5 · First power-on checklist</h3>
-<div class="warn"><b>Check the factory channels first.</b> Units have been seen arriving with Zone 1, channel 1 set to <b>462.5625 MHz</b>, which is FRS/GMRS channel 1, and the rest of the factory list may be FRS/GMRS too. This radio isn't certified for FRS or GMRS, so don't transmit on preloaded channels in the 462–467 MHz range. Replace them with your own plan, or keep them for listening.</div>
+<div class="warn" id="setup-factory"><b>First, clear the factory channels.</b> UV-5RM Pro units have been seen arriving with <b>Zone 1, channels 1–30</b> already filled with FRS/GMRS channels: the 22 standard FRS/GMRS channels (462.5500–462.7250 and 467.5625–467.7125 MHz) plus 8 GMRS repeater channels. To check yours, step through Zone 1 with <kbd>▲</kbd> <kbd>▼</kbd> in channel mode and look for frequencies starting 462 or 467.
+<ul class="t" style="margin-top:.5em">
+<li><b>Why remove them:</b> this radio isn't certified for FRS or GMRS, so transmitting on them isn't legal, and a ham licence doesn't cover them. The radio has no receive-only setting per channel, so any of them will transmit if PTT is pressed. And they occupy the slots your own channels should have.</li>
+<li><b>How:</b> <kbd>MENU</kbd> › Program Channel › <b>CH_Delete</b>, one channel at a time (see the <a href="#walk" data-wt="delete">Delete a channel</a> walkthrough). It's much quicker in Baofeng's programming software (see <a href="#pc">Programming on a Mac</a>).</li>
+<li><b>Worth keeping for listening:</b> anyone may listen to FRS. Putting back just FRS 1 (462.5625) and FRS 3 (462.6125, used by many preparedness groups) in a LISTEN zone lets you hear walkie-talkie users nearby; the <a href="#plan">example channel plan</a> includes them. Transmit there only in a genuine emergency.</li>
+<li><b>If your family wants to talk to FRS radios routinely,</b> the legal route is a GMRS licence ($35, no exam, covers your immediate family) and a GMRS-certified radio, not this one.</li>
+</ul></div>
 <p>Do these once on each radio. Each one links to the setting.</p>
 <div class="tw"><table>
 <tr><th>Setting</th><th>Set to</th><th>Why</th></tr>
@@ -442,6 +448,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <tr><td>Radio Setting › ROGER</td><td>OFF</td><td>The end-of-transmission beep annoys other operators</td></tr>
 <tr><td>Radio Setting › TOT</td><td>60–180 s</td><td>Stops a stuck PTT from draining the battery and jamming the channel</td></tr>
 <tr><td>Radio Setting › PTT-ID, SideTone, TAIL</td><td>OFF</td><td>Baofeng's own recommendation for ham use, best repeater compatibility</td></tr>
+<tr><td>Zone 1, factory channels</td><td>Deleted</td><td>Frees the slots for your plan; see the box above</td></tr>
 <tr><td>GNSS › GNSS On/Off, Time Zones</td><td>ON, your zone</td><td>Position and correct clock</td></tr>
 <tr><td>Program Channel › Bandwidth</td><td>Wide</td><td>Standard for ham FM in the US</td></tr>
 </table></div>
@@ -848,7 +855,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <p><b>By keypad</b>, for a handful of channels. Work one zone at a time:</p>
 <ol class="t" style="padding-left:1.3em">
 <li>Switch the radio to that zone: <kbd>MENU</kbd> › Zone, pick it, or choose <b>+Add Zone</b> and type its name (see <a href="#walk" data-wt="zone">Add a zone</a>). Channels are always saved into the zone you're in.</li>
-<li>For each row: frequency mode, type the receive frequency, set the transmit frequency and tone for repeaters, then <b>CH_Memory</b> into the row's channel number. The <a href="#walk" data-wt="save">Save a simplex channel</a> and <a href="#walk" data-wt="repeater">Program a repeater</a> walkthroughs show every key.</li>
+<li>For each row: frequency mode, type the receive frequency, set the transmit frequency and tone for repeaters, then <b>CH_Memory</b> into the row's channel number. CH_Memory opens at the first empty slot, so if your row's number is already taken (by a factory channel, say), delete that channel first with CH_Delete. The <a href="#walk" data-wt="save">Save a simplex channel</a> and <a href="#walk" data-wt="repeater">Program a repeater</a> walkthroughs show every key.</li>
 <li>Name it (<a href="#walk" data-wt="name">Name a channel</a>) and check it against the printed plan.</li>
 </ol>
 <p><b>By computer</b>, for anything more: <b>Export CSV (CHIRP)</b> writes the plan in CHIRP's format (Zone 1 is rows 1–64, Zone 2 is 65–128, and so on), or type it into Baofeng's software. See <a href="#pc">Programming on a Mac</a>; CHIRP support for this radio is still being tested. Power isn't in the export, so set it in the software.</p>
@@ -863,7 +870,7 @@ table.plan tr.pdet .lbf{grid-template-columns:repeat(2,minmax(0,1fr))}
 <li><b>Saved into the wrong zone.</b> The radio saves into whichever zone is showing. Switch zone first.</li>
 <li><b>Different names or channel numbers on different radios.</b> The whole point is that they match.</li>
 <li><b>Mixing wide and narrow</b> between radios: one side sounds faint or distorted.</li>
-<li><b>Leaving the factory channels.</b> Units can arrive with FRS/GMRS channels you mustn't transmit on. Replace them with your plan, or move them to the LISTEN zone.</li>
+<li><b>Leaving the factory channels.</b> Units can arrive with 30 FRS/GMRS channels in Zone 1 that you mustn't transmit on, and they push your channels to 31 onwards. <a href="#setup-factory">Clear them first</a>.</li>
 </ul>
 </div>
 
@@ -1445,8 +1452,8 @@ const WT=[
  ['menu',mm(4),'Press <kbd>MENU</kbd> and go to <b>Program Channel</b> (<kbd>4</kbd>), then <kbd>MENU</kbd>.'],
  ['menu',pc(4),'Optional: set <b>Trans Power</b>, <b>Bandwidth</b> (Wide) and tones here first. Each one: select, <kbd>MENU</kbd>, choose, <kbd>MENU</kbd> to save.'],
  [D('17'),pc(17),'Go to <b>CH_Memory</b> (type <kbd>1</kbd><kbd>7</kbd> or scroll) and press <kbd>MENU</kbd>.'],
- ['up',opt('CH_Memory',['CH01','CH02','CH03','CH04','CH05'],2),'Choose the channel slot to store into with <kbd>▲</kbd><kbd>▼</kbd>.'],
- ['menu',T('CH_Memory','Saved',['CH03 · 146.520']),'Press <kbd>MENU</kbd> to save. Storing into a used slot overwrites it.'],
+ ['up',opt('CH_Memory',['CH01','CH02','CH03','CH04','CH05'],2),'Choose the channel slot to store into with <kbd>▲</kbd><kbd>▼</kbd>. The list opens at the first <b>empty</b> slot: on a radio still holding its 30 factory channels, that is 31.'],
+ ['menu',T('CH_Memory','Saved',['CH03 · 146.520']),'Press <kbd>MENU</kbd> to save. If the number you want is not offered, that slot is in use: free it first with <b>CH_Delete</b>.'],
  ['vfo',S(V('146.520','CH 003'),V('446.000','CH 002','CALL 70')),'Press <kbd>EXIT</kbd>, then <kbd>VFO/MR</kbd> to return to channel mode. Your new channel is there.']],
  after:'The channel is saved into the <b>current zone</b>. Next: <a href="#walk" data-wt="name">give it a name</a>.'},
 {id:'repeater',cat:'Programming',t:'Program a repeater',s:'Example: repeater output 146.940 MHz, −0.600 MHz offset (you transmit on 146.340), 100.0 Hz tone.',steps:[
@@ -1693,7 +1700,7 @@ const MENU=[
 ['Program Channel',13,'Scan Priority','OFF · ON','Make this the priority channel, checked far more often while scanning.'],
 ['Program Channel',14,'TX Admit','Always · Channel Free · CTDS Correct','Block transmitting when the channel is busy (Channel Free), or busy with a different tone.'],
 ['Program Channel',15,'Skip Frequency','OFF · ON','Described in the manual only as on/off; likely skips this entry during scans.'],
-['Program Channel',17,'CH_Memory','CH01–CH64','Save the current settings into a channel slot (creates or overwrites).'],
+['Program Channel',17,'CH_Memory','CH01–CH64','Save the current settings into a channel slot. The list opens at the first empty slot; to reuse a number that is taken, delete that channel first (CH_Delete).'],
 ['Program Channel',18,'CH_Delete','CH01–CH64','Erase a channel slot.'],
 ['Radio Info',1,'Versions','Firmware · Hardware','Version information; useful when asking for support.'],
 ['Radio Info',2,'My Radio','Radio ID · Radio Name','View and change this radio\'s ID (used for signalling and GPS sharing) and its name.'],
@@ -1729,6 +1736,7 @@ const FIX=[
 ['Forgot the power-on password','—','Read the radio with the CPS and clear the password there. See Unlock guides.'],
 ['Mac doesn\'t see the programming cable','Counterfeit PL2303 chip, charge-only adapter, or plug not seated','Run ls /dev/cu.* in Terminal with the cable in and out. Use a CH340 or FTDI cable; don\'t install extra drivers.'],
 ['CHIRP says the radio did not respond','GPS firmware isn\'t supported by official CHIRP builds','Use the experimental module or Baofeng\'s CPS in a Windows VM. See Programming on a Mac.'],
+['CH_Memory starts at 31, or won\'t offer channel 1','Channels 1–30 already hold the factory FRS/GMRS channels, and CH_Memory only opens at the first empty slot','Delete the factory channels (MENU › Program Channel › CH_Delete, or in Baofeng\'s software); see Out of the box › First power-on checklist.'],
 ['Charger light never turns green','Radio is switched on in the cradle','Switch the radio off while charging.'],
 ['CPS in the Windows VM can\'t connect','Cable not passed through to the VM, wrong COM port, or missing Windows driver','Attach the USB device to the VM, check Device Manager for the COM number, push the plug in hard.']];
 $('#fixt').innerHTML='<tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr>'+(FIX.map((f,i)=>`<tr id="f${i}"><td><b>${f[0]}</b></td><td>${f[1]}</td><td>${f[2]}</td></tr>`).join(''));
