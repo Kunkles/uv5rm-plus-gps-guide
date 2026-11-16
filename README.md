@@ -12,6 +12,7 @@ Read it online at <https://kunkles.github.io/uv5rm-plus-gps-guide/>, or download
 - **Clickable radio** explaining each key's short and long press.
 - **Menu reference** for the GPS firmware's seven menus.
 - **How repeaters work**: the idea, the three settings, reading a listing, how to tell you're getting in, linked systems and nets.
+- **Reaching a distant area** with a **link finder**: finds linked repeaters (IRLP, AllStar, EchoLink, WIN System) near you and near a distant town on the same network, from HearHam's repeater list loaded once into the browser.
 - **On-air basics**, range and accessories, field readiness, troubleshooting, reference tables.
 - **Programming on a Mac** and unlock guides.
 - **Channel plan** with CSV export in CHIRP's layout, a **test log**, a printable **pocket cheat sheet** and **radio labels**.
